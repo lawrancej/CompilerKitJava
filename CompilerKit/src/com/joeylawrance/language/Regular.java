@@ -8,7 +8,7 @@ import java.util.HashMap;
  */
 public class Regular {
 	/**
-	 * TODO: implement group capture, forward/backward references
+	 * TODO: implement group capture, forward/backward references, tokens, scanning
 	 * TODO: boolean operations on regexes (e.g., not, and)
 	 * 
 	 */
