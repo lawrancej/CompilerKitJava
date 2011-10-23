@@ -10,7 +10,7 @@ public class Regular {
 	/**
 	 * TODO: implement group capture, forward/backward references, tokens, scanning
 	 * TODO: boolean operations on regexes (e.g., not, and)
-	 * 
+	 * TODO: need to find an alternative to reflection. I think some sort of locator using instanceof would do wonders.
 	 */
 	/**
 	 * Abstract superclass for all parser combinator classes.
