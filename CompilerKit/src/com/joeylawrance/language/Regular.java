@@ -16,7 +16,7 @@ public class Regular {
 	 * Abstract superclass for all parser combinator classes.
 	 * Uses the Composite and Visitor design patterns.
 	 */
-	public static abstract class Parser {
+	public static abstract class Parser { // Probably should move out of regular
 		public abstract ReflectiveVisitor<String> getPrinter();
 		public String toString () {
 			return getPrinter().visit(this);
@@ -43,6 +43,7 @@ public class Regular {
 		
 		// Regular expression extensions
 		public T visit(PositiveClosure positiveClosure) { return visit(positiveClosure.equivalent); }
+		public T visit(Times times) { return visit(times.equivalent); }
 	}
 	static class Expression extends Parser {
 		public ReflectiveVisitor<String> getPrinter() {
@@ -101,9 +102,11 @@ public class Regular {
 	public static KleeneClosure kleeneClosure (Parser regex) {
 		return new KleeneClosure(regex);
 	}
-	static class PositiveClosure extends Expression {
+	static class EquivalentExpression extends Expression {
 		Parser equivalent;
 		Parser node;
+	}
+	static class PositiveClosure extends EquivalentExpression {
 		public PositiveClosure (Parser node) {
 			this.equivalent = catenation(node, kleeneClosure(node));
 			this.node = node;
@@ -111,6 +114,20 @@ public class Regular {
 	}
 	public static Parser positiveClosure (Parser r) {
 		return new PositiveClosure(r);
+	}
+	static class Times extends EquivalentExpression {
+		int k;
+		public Times (Parser node, int k) {
+			Parser[] parsers = new Parser[k];
+			for (int i = 0; i < k; i++)
+				parsers[i] = node;
+			this.equivalent = catenation(parsers);
+			this.node = node;
+			this.k = k;
+		}
+	}
+	public static Parser times (Parser r, int k) {
+		return new Times(r, k);
 	}
 	static class NullableVisitor extends Visitor<Parser> {
 		public Parser visit(EmptySet emptySet)       { return emptySet; }
@@ -199,6 +216,9 @@ public class Regular {
 		}
 		public String visit(PositiveClosure positiveClosure) {
 			return "(" + visit(positiveClosure.node) + ")+";
+		}
+		public String visit(Times times) {
+			return "(" + visit(times.node) + "){" + times.k + "}";
 		}
 	}
 	public static Parser lower() {
