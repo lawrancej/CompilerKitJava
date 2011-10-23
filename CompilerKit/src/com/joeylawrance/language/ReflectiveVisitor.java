@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 
 public abstract class ReflectiveVisitor<T> {
 	@SuppressWarnings("unchecked")
-	public T visit( Object object )
+	public T visit(Object object)
 	{
 		try {
 			Method m = getClass().getMethod("visit", new Class[] {object.getClass()});

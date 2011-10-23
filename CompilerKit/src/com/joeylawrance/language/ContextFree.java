@@ -99,32 +99,23 @@ public class ContextFree extends Regular {
 			return visit(alternation.left);
 			// return alternation.right.accept(this);
 		}
-
-		@Override
 		public Parser visit(Catenation catenation) {
 			// TODO Auto-generated method stub
 			return null;
 			
 		}
-
-		@Override
 		public Parser visit(KleeneClosure kleeneClosure) {
 			// TODO Auto-generated method stub
 			return null;
 		}
-
-		@Override
 		public Parser visit(Nonterminal nonterminal) {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		
-		@Override
 		public Parser visit(CFG cfg) {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		
 	}
 	public static class DerivativeVisitor extends com.joeylawrance.language.Regular.DerivativeVisitor {
 		//FIXME
