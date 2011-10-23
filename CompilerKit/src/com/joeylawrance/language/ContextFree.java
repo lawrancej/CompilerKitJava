@@ -1,7 +1,7 @@
 package com.joeylawrance.language;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+//import java.util.HashMap;
 
 /**
  * Matches Context-free grammars using derivatives.
@@ -11,7 +11,7 @@ import java.util.HashMap;
  */
 public class ContextFree extends Regular {
 	// FIXME: nonterminals
-	public static class Grammar extends Parser {
+	static class Grammar extends Parser {
 		public ReflectiveVisitor<String> getPrinter() {
 			return new StringVisitor();
 		}
@@ -26,11 +26,11 @@ public class ContextFree extends Regular {
 			this.start = start;
 		}
 	}
-	public static abstract class Visitor<T> extends com.joeylawrance.language.Regular.Visitor<T> {
+	protected static abstract class Visitor<T> extends com.joeylawrance.language.Regular.Visitor<T> {
 		public abstract T visit(Nonterminal nonterminal);
 		public abstract T visit(CFG cfg);		
 	}
-	private static class NonterminalListBuilder extends Visitor<Void> {
+	static class NonterminalListBuilder extends Visitor<Void> {
 		CFG grammar;
 		public Void visit(EmptySet emptySet) { return null; }
 		public Void visit(EmptyString emptyString) { return null; }
@@ -90,7 +90,7 @@ public class ContextFree extends Regular {
 	public static Nonterminal nonterminal (String name) {
 		return new Nonterminal(name);
 	}
-	public static class FixedPointVisitor extends Visitor<Parser> {
+	static class FixedPointVisitor extends Visitor<Parser> {
 		public Parser visit(EmptySet emptySet) { return emptySet; }
 		public Parser visit(EmptyString emptyString) { return emptyString; }  // Should really be the set containing the empty string
 		public Parser visit(Symbol symbol) { return emptySet; }
@@ -117,7 +117,7 @@ public class ContextFree extends Regular {
 			return null;
 		}
 	}
-	public static class DerivativeVisitor extends com.joeylawrance.language.Regular.DerivativeVisitor {
+	static class DerivativeVisitor extends com.joeylawrance.language.Regular.DerivativeVisitor {
 		//FIXME
 		public Parser visit(Nonterminal nonterminal) {
 			Nonterminal result = new Nonterminal (nonterminal.name);
@@ -127,9 +127,9 @@ public class ContextFree extends Regular {
 		public Parser visit(CFG cfg) {
 			return visit(cfg.start);
 		}
-		public HashMap<Pair<Character,Nonterminal>,Nonterminal> map = new HashMap<Pair<Character,Nonterminal>,Nonterminal>();
+//		public HashMap<Pair<Character,Nonterminal>,Nonterminal> map = new HashMap<Pair<Character,Nonterminal>,Nonterminal>();
 	}
-	protected static class CompactionVisitor extends com.joeylawrance.language.Regular.CompactionVisitor {
+	static class CompactionVisitor extends com.joeylawrance.language.Regular.CompactionVisitor {
 		public Parser visit(Nonterminal nonterminal) { // FIXME: doesn't handle S->S|lambda
 			Parser p = visit(nonterminal.node);
 			if (p == emptySet) return emptySet;
@@ -143,7 +143,7 @@ public class ContextFree extends Regular {
 			return new CFG((Nonterminal)start);
 		}		
 	}
-	protected static class StringVisitor extends com.joeylawrance.language.Regular.StringVisitor {
+	static class StringVisitor extends com.joeylawrance.language.Regular.StringVisitor {
 		public String visit(Nonterminal nonterminal) {
 			return nonterminal.name;
 		}
@@ -157,25 +157,5 @@ public class ContextFree extends Regular {
 			}
 			return sb.toString();
 		}		
-	}
-	public static void main(String[] args) {
-		Nonterminal value = nonterminal("value");
-		Nonterminal product = nonterminal("product");
-		Nonterminal sum = nonterminal("sum");
-		Nonterminal expr = nonterminal ("expr");
-		CFG formula = new CFG(expr);
-
-		value.becomes(positiveClosure(digit()));
-		value.becomes(parens(expr));
-		product.becomes(value, kleeneClosure(catenation(alternation(symbol('*'),symbol('/')), value)));
-		sum.becomes(product, kleeneClosure(catenation(alternation(symbol('+'),symbol('-')),product)));
-		expr.becomes(sum);
-		System.out.println(formula);
-
-		Nonterminal s = nonterminal("S");
-		CFG cfg = new CFG(s);
-		s.becomes(s,parens(s));
-		s.becomes();
-		System.out.println(cfg);
 	}
 }

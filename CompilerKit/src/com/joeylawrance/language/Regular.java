@@ -8,7 +8,7 @@ import java.util.HashMap;
  */
 public class Regular {
 	/**
-	 * TODO: implement group capture
+	 * TODO: implement group capture, forward/backward references
 	 * TODO: boolean operations on regexes (e.g., not, and)
 	 * 
 	 */
@@ -16,12 +16,12 @@ public class Regular {
 	 * Abstract superclass for all parser combinator classes.
 	 * Uses the Composite and Visitor design patterns.
 	 */
-	protected static abstract class Parser {
+	public static abstract class Parser {
 		public abstract ReflectiveVisitor<String> getPrinter();
 		public String toString () {
 			return getPrinter().visit(this);
 		}
-		public boolean recognize (CharSequence str) {
+		public boolean recognize (CharSequence str) { // Move outside, because of visibility issues and besides, this wont work with Regular and Context-Free
 			Parser parser = this;
 			DerivativeVisitor derivative = new DerivativeVisitor();
 			for (int i = 0; i < str.length(); i++) {
@@ -32,7 +32,7 @@ public class Regular {
 			return nullable.visit(parser) == emptyString;
 		}
 	}
-	public static abstract class Visitor<T> extends ReflectiveVisitor<T> {
+	protected static abstract class Visitor<T> extends ReflectiveVisitor<T> {
 		// Primitive regular expressions
 		public abstract T visit(EmptySet emptySet);
 		public abstract T visit(EmptyString emptyString);
@@ -44,30 +44,30 @@ public class Regular {
 		// Regular expression extensions
 		public T visit(PositiveClosure positiveClosure) { return visit(positiveClosure.equivalent); }
 	}
-	public static class Expression extends Parser {
+	static class Expression extends Parser {
 		public ReflectiveVisitor<String> getPrinter() {
 			return new StringVisitor();
 		}
 	}
-	public static class EmptyString extends Expression {}
+	static class EmptyString extends Expression {}
 	public static final EmptyString emptyString = new EmptyString();
-	public static class EmptySet extends Expression {}
+	static class EmptySet extends Expression {}
 	public static final EmptySet emptySet = new EmptySet();
-	public static class Symbol extends Expression {
+	static class Symbol extends Expression {
 		final char c;
 		public Symbol (char c) { this.c = c; }
 	}
-	public static final HashMap<Character, Symbol> flyweight = new HashMap<Character, Symbol>();
+	static final HashMap<Character, Symbol> flyweight = new HashMap<Character, Symbol>();
 	public static Symbol symbol (char c) {
 		if (!flyweight.containsKey(c))
 			flyweight.put(c, new Symbol(c));
 		return flyweight.get(c);
 	}
-	public static class BinaryOperator extends Expression {
+	static class BinaryOperator extends Expression {
 		Parser left, right;		
 		public BinaryOperator (Parser left, Parser right) { this.left = left; this.right = right; }
 	}
-	public static class Alternation extends BinaryOperator {
+	static class Alternation extends BinaryOperator {
 		public Alternation(Parser left, Parser right) { super(left, right); }
 	}
 	public static Alternation alternation (Parser ... regexen) {
@@ -77,7 +77,7 @@ public class Regular {
 		}
 		return (Alternation) current;
 	}
-	public static class Catenation extends BinaryOperator {
+	static class Catenation extends BinaryOperator {
 		public Catenation(Parser left, Parser right) { super(left, right); }
 	}
 	public static Catenation catenation (Parser ... regexen) {
@@ -94,14 +94,14 @@ public class Regular {
 		}
 		return catenation(symbols);
 	}
-	public static class KleeneClosure extends Expression {
+	static class KleeneClosure extends Expression {
 		Parser node;
 		public KleeneClosure (Parser node) { this.node = node; }
 	}
 	public static KleeneClosure kleeneClosure (Parser regex) {
 		return new KleeneClosure(regex);
 	}
-	public static class PositiveClosure extends Expression {
+	static class PositiveClosure extends Expression {
 		Parser equivalent;
 		Parser node;
 		public PositiveClosure (Parser node) {
@@ -112,7 +112,7 @@ public class Regular {
 	public static Parser positiveClosure (Parser r) {
 		return new PositiveClosure(r);
 	}
-	public static class NullableVisitor extends Visitor<Parser> {
+	static class NullableVisitor extends Visitor<Parser> {
 		public Parser visit(EmptySet emptySet)       { return emptySet; }
 		public Parser visit(EmptyString emptyString) { return emptyString; }
 		public Parser visit(Symbol symbol)           { return emptySet; }
@@ -133,8 +133,7 @@ public class Regular {
 		public Parser visit(KleeneClosure kleeneClosure) { return emptyString; }
 	}
 	public static final NullableVisitor nullable = new NullableVisitor();
-	public static final class Pair<A,B> { public A a; public B b; }
-	public static class DerivativeVisitor extends Visitor<Parser> {
+	static class DerivativeVisitor extends Visitor<Parser> {
 		public char c;
 		public DerivativeVisitor() {}
 		public DerivativeVisitor(char c)             { this.c = c; }
@@ -153,7 +152,7 @@ public class Regular {
 			return new Catenation (visit(kleeneClosure.node), kleeneClosure);
 		}
 	}
-	protected static class CompactionVisitor extends Visitor<Parser> {
+	static class CompactionVisitor extends Visitor<Parser> {
 		public Parser visit(EmptySet emptySet)       { return emptySet; }
 		public Parser visit(EmptyString emptyString) { return emptyString; }
 		public Parser visit(Symbol symbol)           { return symbol; }
@@ -175,8 +174,8 @@ public class Regular {
 			return new KleeneClosure(visit(kleeneClosure.node));
 		}
 	}
-	public static final CompactionVisitor compactor = new CompactionVisitor();
-	protected static class StringVisitor extends Visitor<String> {
+	static final CompactionVisitor compactor = new CompactionVisitor();
+	static class StringVisitor extends Visitor<String> {
 		public String visit(EmptySet emptySet)       { return "{}"; }
 		public String visit(EmptyString emptyString) { return "λ"; }
 		public String visit(Symbol symbol)           { return "" + symbol.c; }
@@ -185,11 +184,11 @@ public class Regular {
 		}
 		public String visit(Catenation catenation) { // TODO:  maybe materialize new classes: {m,n}, character class, .?
 			StringBuilder sb = new StringBuilder();
-			if (isAlternation(catenation.left))
+			if (catenation.left instanceof Alternation)
 				sb.append("(" + visit(catenation.left) + ")");
 			else
 				sb.append(visit(catenation.left));
-			if (isAlternation(catenation.right))
+			if (catenation.right instanceof Alternation)
 				sb.append("(" + visit(catenation.right) + ")");
 			else
 				sb.append(visit(catenation.right));
@@ -202,7 +201,6 @@ public class Regular {
 			return "(" + visit(positiveClosure.node) + ")+";
 		}
 	}
-	private static boolean isAlternation(Parser p) {return p instanceof Alternation; }
 	public static Parser lower() {
 		Parser[] regexen = new Parser[26];
 		for (int i = 0; i < regexen.length; i++) {
@@ -226,11 +224,5 @@ public class Regular {
 	}
 	public static Parser parens(Parser parser) {
 		return catenation(symbol('('),parser,symbol(')'));
-	}
-	public static void main (String[] args) {
-		Parser r = catenation(positiveClosure(alpha()), kleeneClosure(digit()), string("@bridgew.edu"));
-		System.out.println(r);
-		System.out.println(r.recognize("somebody@bridgew.edu"));
-		System.out.println(r.recognize("somebody@wit.edu"));
 	}
 }
