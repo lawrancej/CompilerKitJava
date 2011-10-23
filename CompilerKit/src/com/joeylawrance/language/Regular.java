@@ -203,13 +203,22 @@ public class Regular {
 		}
 	}
 	private static boolean isAlternation(Parser p) {return p instanceof Alternation; }
-	public static Parser alpha() {
-		Parser[] regexen = new Parser[52];
-		for (int i = 0; i < 26; i++) {
+	public static Parser lower() {
+		Parser[] regexen = new Parser[26];
+		for (int i = 0; i < regexen.length; i++) {
 			regexen[i] = symbol((char) ('a' + i));
-			regexen[i+26] = symbol((char) ('A' + i));
 		}
 		return alternation(regexen);
+	}
+	public static Parser upper() {
+		Parser[] regexen = new Parser[26];
+		for (int i = 0; i < regexen.length; i++) {
+			regexen[i] = symbol((char) ('A' + i));
+		}
+		return alternation(regexen);
+	}
+	public static Parser alpha() {
+		return alternation(lower(),upper());
 	}
 	public static Parser digit() {
 		return alternation(symbol('0'), symbol('1'), symbol('2'),symbol('3'), symbol('4'),
