@@ -1,5 +1,4 @@
 package com.joeylawrance.language;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 
 /**
@@ -18,8 +17,9 @@ public class Regular {
 	 * Uses the Composite and Visitor design patterns.
 	 */
 	protected static abstract class Parser {
+		public abstract ReflectiveVisitor<String> getPrinter();
 		public String toString () {
-			return printer.visit(this);
+			return getPrinter().visit(this);
 		}
 		public boolean recognize (CharSequence str) {
 			Parser parser = this;
@@ -32,30 +32,24 @@ public class Regular {
 			return nullable.visit(parser) == emptyString;
 		}
 	}
-	public static abstract class Visitor<T> {
+	public static abstract class Visitor<T> extends ReflectiveVisitor<T> {
 		public abstract T visit(EmptySet emptySet);
 		public abstract T visit(EmptyString emptyString);
 		public abstract T visit(Symbol symbol);
 		public abstract T visit(Alternation alternation);
 		public abstract T visit(Catenation catenation);
 		public abstract T visit(KleeneClosure kleeneClosure);
-		@SuppressWarnings("unchecked")
-		public T visit( Object object )
-		{
-			try {
-				Method m = getClass().getMethod("visit", new Class[]{object.getClass()});
-				return (T) m.invoke(this, new Object[]{object});
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return null;
+	}
+	public static class Expression extends Parser {
+		public ReflectiveVisitor<String> getPrinter() {
+			return new StringVisitor();
 		}
 	}
-	public static class EmptyString extends Parser {}
+	public static class EmptyString extends Expression {}
 	public static final EmptyString emptyString = new EmptyString();
-	public static class EmptySet extends Parser {}
+	public static class EmptySet extends Expression {}
 	public static final EmptySet emptySet = new EmptySet();
-	public static class Symbol extends Parser {
+	public static class Symbol extends Expression {
 		final char c;
 		public Symbol (char c) { this.c = c; }
 	}
@@ -65,7 +59,7 @@ public class Regular {
 			flyweight.put(c, new Symbol(c));
 		return flyweight.get(c);
 	}
-	public static class BinaryOperator extends Parser {
+	public static class BinaryOperator extends Expression {
 		Parser left, right;		
 		public BinaryOperator (Parser left, Parser right) { this.left = left; this.right = right; }
 	}
@@ -96,7 +90,7 @@ public class Regular {
 		}
 		return catenation(symbols);
 	}
-	public static class KleeneClosure extends Parser {
+	public static class KleeneClosure extends Expression {
 		Parser node;
 		public KleeneClosure (Parser node) { this.node = node; }
 	}
@@ -190,7 +184,6 @@ public class Regular {
 			return "(" + visit(kleeneClosure.node) + ")*";
 		}
 	}
-	protected static StringVisitor printer = new StringVisitor();
 	private static boolean isAlternation(Parser p) {return p instanceof Alternation; }
 	public static Parser alpha() {
 		Parser[] regexen = new Parser[52];
@@ -213,5 +206,6 @@ public class Regular {
 	public static void main (String[] args) {
 		Parser r = catenation(positiveClosure(alpha()), kleeneClosure(digit()), string("@bridgew.edu"));
 		System.out.println(r.recognize("somebody@bridgew.edu"));
+		System.out.println(r.recognize("somebody@wit.edu"));
 	}
 }
