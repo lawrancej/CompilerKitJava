@@ -1,24 +1,24 @@
-import java.util.ArrayList;
+package com.joeylawrance.language;
 import java.util.HashMap;
 
 /**
- * Matches regular expressions and context-free grammars using derivatives.
- * References:
- * 1. "Yacc is Dead", by Matt Might and David Darais
- * 2. "Derivative Parsing", by Daniel Spiewak
- * 3. "Derivatives of Regular expressions", by Janus Brzozowski
+ * Matches regular expressions using derivatives.
+ * Reference:
+ * "Derivatives of Regular expressions", by Janus Brzozowski
  */
-public class Language {
+public class Regular {
 	/**
-	 * FIXME: Nonterminals
-	 * TODO: implement group capture, boolean operations on regexes
+	 * TODO: implement group capture
+	 * TODO: boolean operations on regexes (e.g., not, and)
+	 * TODO: reflective visitor
+	 * 
 	 */
 	/**
 	 * Abstract superclass for all parser combinator classes.
-	 * Uses the Composite and Visitor design patterns to achieve laziness.
+	 * Uses the Composite and Visitor design patterns.
 	 */
-	public static abstract class Parser {
-		<T> T accept (Visitor<T> v) { return null; }
+	protected static abstract class Parser {
+		public abstract <T> T accept (Visitor<T> v);
 		public String toString () {
 			return this.accept(printer);
 		}
@@ -33,63 +33,6 @@ public class Language {
 			return parser.accept(nullable) == emptyString;
 		}
 	}
-	/**
-	 * Publicly-available regular expression class.
-	 */
-	public static abstract class Regex extends Parser {
-		public <T> T accept(Visitor<T> v) { return v.visit(this); }
-	}
-	/**
-	 * Publicly-available context-free grammar class.
-	 */
-	public static class CFG extends Parser {
-		private Nonterminal start;
-		private ArrayList <Nonterminal> nonterminals = new ArrayList<Nonterminal>();
-		public CFG(Nonterminal start) {
-			this.start = start;
-		}
-		public <T> T accept(Visitor<T> v) {
-			builder.visit(this);
-			return v.visit(this);
-		}
-	}
-	private static class NonterminalListBuilder implements Visitor<Void> {
-		CFG grammar;
-		public Void visit(EmptySet emptySet) { return null; }
-		public Void visit(EmptyString emptyString) { return null; }
-		public Void visit(Symbol symbol) { return null; }
-		public Void visit(Alternation alternation) {
-			alternation.left.accept(this);
-			alternation.right.accept(this);
-			return null;
-		}
-		public Void visit(Catenation catenation) {
-			catenation.left.accept(this);
-			catenation.right.accept(this);
-			return null;
-		}
-		public Void visit(KleeneClosure kleeneClosure) {
-			kleeneClosure.node.accept(this);
-			return null;
-		}
-		public Void visit(Nonterminal nonterminal) {
-			// Halt on a rule like: S -> S
-			if (!grammar.nonterminals.contains(nonterminal)) {
-				grammar.nonterminals.add(nonterminal);
-				nonterminal.node.accept(this);
-			}
-			return null;
-		}
-		public Void visit(Regex regex) {
-			return null;
-		}
-		public Void visit(CFG cfg) {
-			grammar = cfg;
-			cfg.start.accept(this);
-			return null;
-		}
-	}
-	private static final NonterminalListBuilder builder = new NonterminalListBuilder();
 	public interface Visitor<T> {
 		T visit(EmptySet emptySet);
 		T visit(EmptyString emptyString);
@@ -97,19 +40,16 @@ public class Language {
 		T visit(Alternation alternation);
 		T visit(Catenation catenation);
 		T visit(KleeneClosure kleeneClosure);
-		T visit(Nonterminal nonterminal);
-		T visit(Regex regex);
-		T visit(CFG cfg);
 	}
-	public static class EmptyString extends Regex {
+	public static class EmptyString extends Parser {
 		public <T> T accept(Visitor<T> v) { return v.visit(this); }
 	}
 	public static final EmptyString emptyString = new EmptyString();
-	public static class EmptySet extends Regex {
+	public static class EmptySet extends Parser {
 		public <T> T accept(Visitor<T> v) { return v.visit(this); }
 	}
 	public static final EmptySet emptySet = new EmptySet();
-	public static class Symbol extends Regex {
+	public static class Symbol extends Parser {
 		char c;
 		public Symbol (char c) { this.c = c; }
 		public <T> T accept(Visitor<T> v) { return v.visit(this); }
@@ -120,7 +60,7 @@ public class Language {
 			flyweight.put(c, new Symbol(c));
 		return flyweight.get(c);
 	}
-	public static class Alternation extends Regex {
+	public static class Alternation extends Parser {
 		Parser left, right;
 		public Alternation (Parser left, Parser right) { this.left = left; this.right = right; }
 		public <T> T accept(Visitor<T> v) { return v.visit(this); }
@@ -132,7 +72,7 @@ public class Language {
 		}
 		return (Alternation) current;
 	}
-	public static class Catenation extends Regex {
+	public static class Catenation extends Parser {
 		Parser left, right;
 		public Catenation (Parser left, Parser right) { this.left = left; this.right = right; }
 		public <T> T accept(Visitor<T> v) { return v.visit(this); }
@@ -151,38 +91,13 @@ public class Language {
 		}
 		return catenation(symbols);
 	}
-	public static class KleeneClosure extends Regex {
+	public static class KleeneClosure extends Parser {
 		Parser node;
 		public KleeneClosure (Parser node) { this.node = node; }
 		public <T> T accept(Visitor<T> v) { return v.visit(this); }
 	}
 	public static KleeneClosure kleeneClosure (Parser regex) {
 		return new KleeneClosure(regex);
-	}
-	public static class Nonterminal extends Parser {
-		Parser node; String name;
-		public Nonterminal (String name) { this.name = name; }
-		public void becomes (Parser ...nodes) {
-			// Construct new node from node parameter
-			Parser newNode;
-			if (nodes.length > 1)
-				newNode = catenation(nodes);
-			else if (nodes.length == 1)
-				newNode = nodes[0];
-			else newNode = emptyString;
-			
-			// If the nonterminal doesn't have a node, it's newNode
-			// Otherwise, its the existing node or newNode
-			if (node == null) {
-				node = newNode;
-			} else {
-				node = alternation(node,newNode);
-			}
-		}
-		public <T> T accept(Visitor<T> v) { return v.visit(this); }
-	}
-	public static Nonterminal nonterminal (String name) {
-		return new Nonterminal(name);
 	}
 	public static class NullableVisitor implements Visitor<Parser> {
 		public Parser visit(EmptySet emptySet)       { return emptySet; }
@@ -203,17 +118,13 @@ public class Language {
 			} else return emptyString;
 		}
 		public Parser visit(KleeneClosure kleeneClosure) { return emptyString; }
-		public Parser visit(Nonterminal nonterminal) { return emptySet; } //FIXME
-		public Parser visit(Regex regex) { return null; } // FIXME
-		public Parser visit(CFG cfg) { return cfg.start.accept(this); }
 	}
 	public static final NullableVisitor nullable = new NullableVisitor();
 	public static final class Pair<A,B> { public A a; public B b; }
 	public static class DerivativeVisitor implements Visitor<Parser> {
 		public char c;
-		public HashMap<Pair<Character,Nonterminal>,Nonterminal> map = new HashMap<Pair<Character,Nonterminal>,Nonterminal>();
 		public DerivativeVisitor() {}
-		public DerivativeVisitor(char c)           { this.c = c; }
+		public DerivativeVisitor(char c)             { this.c = c; }
 		public Parser visit(EmptySet emptySet)       { return emptySet; }
 		public Parser visit(EmptyString emptyString) { return emptySet; }
 		public Parser visit(Symbol symbol)           { return (symbol.c == c) ? emptyString : emptySet; }
@@ -228,20 +139,8 @@ public class Language {
 		public Parser visit(KleeneClosure kleeneClosure) {
 			return new Catenation (kleeneClosure.node.accept(this), kleeneClosure);
 		}
-		//FIXME
-		public Parser visit(Nonterminal nonterminal) {
-			Nonterminal result = new Nonterminal (nonterminal.name);
-			result.becomes(nonterminal.accept(this));
-			return result; 
-		}
-		public Parser visit(Regex regex) {
-			return null;
-		}
-		public Parser visit(CFG cfg) {
-			return cfg.start.accept(this);
-		}
 	}
-	private static class CompactionVisitor implements Visitor<Parser> {
+	protected static class CompactionVisitor implements Visitor<Parser> {
 		public Parser visit(EmptySet emptySet)       { return emptySet; }
 		public Parser visit(EmptyString emptyString) { return emptyString; }
 		public Parser visit(Symbol symbol)           { return symbol; }
@@ -262,56 +161,36 @@ public class Language {
 		public Parser visit(KleeneClosure kleeneClosure) {
 			return new KleeneClosure(kleeneClosure.node.accept(this));
 		}
-		public Parser visit(Nonterminal nonterminal) { // FIXME: doesn't handle S->S|lambda
-			Parser p = nonterminal.node.accept(this);
-			if (p == emptySet) return emptySet;
-			Nonterminal result = new Nonterminal(nonterminal.name);
-			result.becomes(p);
-			return result;
-		}
-		public Parser visit(Regex regex) {
-			return null;
-		}
-		public Parser visit(CFG cfg) {
-			Parser start = cfg.start.accept(this);
-			if (start == emptySet) return emptySet;
-			return new CFG((Nonterminal)start);
-		}
 	}
 	public static final CompactionVisitor compactor = new CompactionVisitor();
-	private static class StringVisitor implements Visitor<String> {
+	protected static class StringVisitor implements Visitor<String> {
 		public String visit(EmptySet emptySet)       { return "{}"; }
 		public String visit(EmptyString emptyString) { return "λ"; }
 		public String visit(Symbol symbol)           { return "" + symbol.c; }
 		public String visit(Alternation alternation) {
-			return "(" + alternation.left.accept(this) + "|" + alternation.right.accept(this) + ")";
+			return alternation.left.accept(this) + "|" + alternation.right.accept(this);
 		}
 		public String visit(Catenation catenation) {
-			return catenation.left.accept(this) + catenation.right.accept(this);
+			StringBuilder sb = new StringBuilder();
+			if (isAlternation(catenation.left))
+				sb.append("(" + catenation.left.accept(this) + ")");
+			else
+				sb.append(catenation.left.accept(this));
+			if (isAlternation(catenation.right))
+				sb.append("(" + catenation.right.accept(this) + ")");
+			else
+				sb.append(catenation.right.accept(this));
+			return sb.toString();
 		}
 		public String visit(KleeneClosure kleeneClosure) {
 			return "(" + kleeneClosure.node.accept(this) + ")*";
 		}
-		public String visit(Nonterminal nonterminal) {
-			return nonterminal.name;
-		}
-		public String visit(Regex regex) {
-			return null;
-		}
-		public String visit(CFG cfg) {
-			StringBuilder sb = new StringBuilder();
-			for (Nonterminal nonterm : cfg.nonterminals) {
-				sb.append(nonterm.name + " -> ");
-				sb.append(nonterm.node.accept(this));
-				sb.append("\n");
-			}
-			return sb.toString();
-		}
 	}
-	public static final StringVisitor printer = new StringVisitor();
+	protected static StringVisitor printer = new StringVisitor();
+	private static boolean isAlternation(Parser p) {return p instanceof Alternation; }
 	public static Parser alpha() {
 		Parser[] regexen = new Parser[52];
-		for (int i = 0; i < regexen.length; i++) {
+		for (int i = 0; i < 26; i++) {
 			regexen[i] = symbol((char) ('a' + i));
 			regexen[i+26] = symbol((char) ('A' + i));
 		}
@@ -328,26 +207,7 @@ public class Language {
 		return catenation(r, kleeneClosure(r));
 	}
 	public static void main (String[] args) {
-		Nonterminal value = nonterminal("value");
-		Nonterminal product = nonterminal("product");
-		Nonterminal sum = nonterminal("sum");
-		Nonterminal expr = nonterminal ("expr");
-		CFG formula = new CFG(expr);
-
-		value.becomes(positiveClosure(digit()));
-		value.becomes(parens(expr));
-		product.becomes(value, kleeneClosure(catenation(alternation(symbol('*'),symbol('/')), value)));
-		sum.becomes(product, kleeneClosure(catenation(alternation(symbol('+'),symbol('-')),product)));
-		expr.becomes(sum);
-		System.out.println(formula);
-		
-		
-		Nonterminal s = nonterminal("S");
-		CFG cfg = new CFG(s);
-		s.becomes(s,parens(s));
-		s.becomes();
-//		Parser r = catenation(positiveClosure(alpha()), kleeneClosure(digit()), string("@bridgew.edu"));
-		System.out.println(cfg);
-//		System.out.println(s.recognize("()"));
+		Parser r = catenation(positiveClosure(alpha()), kleeneClosure(digit()), string("@bridgew.edu"));
+		System.out.println(r.recognize("somebody@wit.edu"));
 	}
 }
