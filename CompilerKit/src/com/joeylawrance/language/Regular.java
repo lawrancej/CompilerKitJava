@@ -33,12 +33,16 @@ public class Regular {
 		}
 	}
 	public static abstract class Visitor<T> extends ReflectiveVisitor<T> {
+		// Primitive regular expressions
 		public abstract T visit(EmptySet emptySet);
 		public abstract T visit(EmptyString emptyString);
 		public abstract T visit(Symbol symbol);
 		public abstract T visit(Alternation alternation);
 		public abstract T visit(Catenation catenation);
 		public abstract T visit(KleeneClosure kleeneClosure);
+		
+		// Regular expression extensions
+		public T visit(PositiveClosure positiveClosure) { return visit(positiveClosure.equivalent); }
 	}
 	public static class Expression extends Parser {
 		public ReflectiveVisitor<String> getPrinter() {
@@ -96,6 +100,17 @@ public class Regular {
 	}
 	public static KleeneClosure kleeneClosure (Parser regex) {
 		return new KleeneClosure(regex);
+	}
+	public static class PositiveClosure extends Expression {
+		Parser equivalent;
+		Parser node;
+		public PositiveClosure (Parser node) {
+			this.equivalent = catenation(node, kleeneClosure(node));
+			this.node = node;
+		}
+	}
+	public static Parser positiveClosure (Parser r) {
+		return new PositiveClosure(r);
 	}
 	public static class NullableVisitor extends Visitor<Parser> {
 		public Parser visit(EmptySet emptySet)       { return emptySet; }
@@ -168,7 +183,7 @@ public class Regular {
 		public String visit(Alternation alternation) {
 			return visit(alternation.left) + "|" + visit(alternation.right);
 		}
-		public String visit(Catenation catenation) {
+		public String visit(Catenation catenation) { // TODO:  maybe materialize new classes: {m,n}, character class, .?
 			StringBuilder sb = new StringBuilder();
 			if (isAlternation(catenation.left))
 				sb.append("(" + visit(catenation.left) + ")");
@@ -182,6 +197,9 @@ public class Regular {
 		}
 		public String visit(KleeneClosure kleeneClosure) {
 			return "(" + visit(kleeneClosure.node) + ")*";
+		}
+		public String visit(PositiveClosure positiveClosure) {
+			return "(" + visit(positiveClosure.node) + ")+";
 		}
 	}
 	private static boolean isAlternation(Parser p) {return p instanceof Alternation; }
@@ -200,11 +218,9 @@ public class Regular {
 	public static Parser parens(Parser parser) {
 		return catenation(symbol('('),parser,symbol(')'));
 	}
-	public static Parser positiveClosure (Parser r) {
-		return catenation(r, kleeneClosure(r));
-	}
 	public static void main (String[] args) {
 		Parser r = catenation(positiveClosure(alpha()), kleeneClosure(digit()), string("@bridgew.edu"));
+		System.out.println(r);
 		System.out.println(r.recognize("somebody@bridgew.edu"));
 		System.out.println(r.recognize("somebody@wit.edu"));
 	}
