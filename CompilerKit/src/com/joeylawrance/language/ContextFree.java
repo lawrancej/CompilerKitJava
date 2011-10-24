@@ -1,7 +1,6 @@
 package com.joeylawrance.language;
 
 import java.util.ArrayList;
-//import java.util.HashMap;
 
 /**
  * Matches Context-free grammars using derivatives.

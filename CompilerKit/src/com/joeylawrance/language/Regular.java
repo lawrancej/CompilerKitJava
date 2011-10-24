@@ -10,7 +10,7 @@ public class Regular {
 	/**
 	 * TODO: implement group capture, forward/backward references, tokens, scanning
 	 * TODO: boolean operations on regexes (e.g., not, and)
-	 * TODO: reflective visitor is slow :(
+	 * TODO: reflective visitor is slow :( maybe use enummap?
 	 */
 
 	protected static abstract class Visitor<T> extends ReflectiveVisitor<T> {
@@ -25,6 +25,7 @@ public class Regular {
 		// Regular expression extensions
 		public T visit(PositiveClosure positiveClosure) { return visit(positiveClosure.equivalent); }
 		public T visit(Times times) { return visit(times.equivalent); }
+		public T visit(CharacterRange characterClass) { return visit(characterClass.equivalent); }
 	}
 	public static final EmptyString emptyString = new EmptyString();
 	public static final EmptySet emptySet = new EmptySet();
@@ -155,27 +156,24 @@ public class Regular {
 		public String visit(Times times) {
 			return "(" + visit(times.node) + "){" + times.k + "}";
 		}
+		public String visit(CharacterRange characterClass) {
+			return "[" + characterClass.start + "-" + characterClass.end + "]";
+		}
 	}
 	public static Parser lower() {
-		Parser[] regexen = new Parser[26];
-		for (int i = 0; i < regexen.length; i++) {
-			regexen[i] = symbol((char) ('a' + i));
-		}
-		return alternation(regexen);
+		return new CharacterRange('a','z');
+	}
+	public static Parser characterClass(char start, char end) {
+		return new CharacterRange(start, end);
 	}
 	public static Parser upper() {
-		Parser[] regexen = new Parser[26];
-		for (int i = 0; i < regexen.length; i++) {
-			regexen[i] = symbol((char) ('A' + i));
-		}
-		return alternation(regexen);
+		return characterClass('A','Z');
 	}
 	public static Parser alpha() {
 		return alternation(lower(),upper());
 	}
 	public static Parser digit() {
-		return alternation(symbol('0'), symbol('1'), symbol('2'),symbol('3'), symbol('4'),
-				symbol('5'), symbol('6'), symbol('7'), symbol('8'), symbol('9'));
+		return characterClass('0','9');
 	}
 	public static Parser parens(Parser parser) {
 		return catenation(symbol('('),parser,symbol(')'));
