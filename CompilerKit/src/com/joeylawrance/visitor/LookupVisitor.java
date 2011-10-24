@@ -24,6 +24,7 @@ public class LookupVisitor<S,T> implements Visitor<S,T> {
 		map.put(klass,visitor);
 	}
 	@SuppressWarnings("unchecked")
+	@Override
 	public T visit(S node) {
 		return ((Visitor<S,T>)map.get(node.getClass())).visit(node);
 	}

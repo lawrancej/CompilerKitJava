@@ -1,8 +1,8 @@
-package com.joeylawrance.language;
+package com.joeylawrance.visitor;
 
 import java.lang.reflect.Method;
 
-public abstract class ReflectiveVisitor<T> {
+public abstract class ReflectiveVisitor<T> implements Visitor<Object, T> {
 	@SuppressWarnings("unchecked")
 	public T visit(Object object)
 	{

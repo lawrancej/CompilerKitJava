@@ -1,6 +1,8 @@
 package com.joeylawrance.language;
 import java.util.HashMap;
 
+import com.joeylawrance.visitor.ReflectiveVisitor;
+
 /**
  * Matches regular expressions using derivatives.
  * Reference:
