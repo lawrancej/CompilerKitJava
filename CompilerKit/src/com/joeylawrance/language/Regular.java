@@ -12,6 +12,7 @@ public class Regular {
 	/**
 	 * TODO: implement group capture, forward/backward references, tokens, scanning
 	 * TODO: boolean operations on regexes (e.g., not, and)
+	 * TODO: reflective visitor is slow :(
 	 */
 
 	protected static abstract class Visitor<T> extends ReflectiveVisitor<T> {
@@ -26,11 +27,6 @@ public class Regular {
 		// Regular expression extensions
 		public T visit(PositiveClosure positiveClosure) { return visit(positiveClosure.equivalent); }
 		public T visit(Times times) { return visit(times.equivalent); }
-	}
-	static class Expression extends Parser {
-		public ReflectiveVisitor<String> getPrinter() {
-			return new StringVisitor();
-		}
 	}
 	public static final EmptyString emptyString = new EmptyString();
 	public static final EmptySet emptySet = new EmptySet();
