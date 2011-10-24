@@ -1,7 +1,6 @@
 package com.joeylawrance.language;
 
 import com.joeylawrance.language.Regular.DerivativeVisitor;
-import com.joeylawrance.visitor.ReflectiveVisitor;
 
 /**
  * Abstract superclass for all parser combinator classes.

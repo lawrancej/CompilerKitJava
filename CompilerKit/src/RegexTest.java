@@ -10,7 +10,7 @@ public class RegexTest {
 		System.out.println(r);
 		System.out.println(r.recognize("somebody@bridgew.edu"));
 		System.out.println(r.recognize("somebody@wit.edu"));
-		System.out.println(System.currentTimeMillis() - before); // 250ms is terrible
+		System.out.println(System.currentTimeMillis() - before); // 477ms is worse
 	}
 
 }

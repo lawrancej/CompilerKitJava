@@ -3,8 +3,6 @@ package com.joeylawrance.language;
 import java.util.ArrayList;
 //import java.util.HashMap;
 
-import com.joeylawrance.visitor.ReflectiveVisitor;
-
 /**
  * Matches Context-free grammars using derivatives.
  * References:
