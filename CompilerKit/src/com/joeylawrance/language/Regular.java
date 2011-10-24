@@ -25,7 +25,7 @@ public class Regular {
 		// Regular expression extensions
 		public T visit(PositiveClosure positiveClosure) { return visit(positiveClosure.equivalent); }
 		public T visit(Times times) { return visit(times.equivalent); }
-		public T visit(CharacterRange characterClass) { return visit(characterClass.equivalent); }
+		public T visit(CharacterRange characterRange) { return visit(characterRange.equivalent); }
 	}
 	public static final EmptyString emptyString = new EmptyString();
 	public static final EmptySet emptySet = new EmptySet();
@@ -104,6 +104,9 @@ public class Regular {
 		public Parser visit(KleeneClosure kleeneClosure) {
 			return new Catenation (visit(kleeneClosure.node), kleeneClosure);
 		}
+		public Parser visit(CharacterRange characterRange) {
+			return (characterRange.start < c && c < characterRange.end) ? emptyString : emptySet;
+		}
 	}
 	static class CompactionVisitor extends Visitor<Parser> {
 		public Parser visit(EmptySet emptySet)       { return emptySet; }
@@ -156,25 +159,17 @@ public class Regular {
 		public String visit(Times times) {
 			return "(" + visit(times.node) + "){" + times.k + "}";
 		}
-		public String visit(CharacterRange characterClass) {
-			return "[" + characterClass.start + "-" + characterClass.end + "]";
+		public String visit(CharacterRange characterRange) {
+			return "[" + characterRange.start + "-" + characterRange.end + "]";
 		}
 	}
-	public static Parser lower() {
-		return new CharacterRange('a','z');
-	}
-	public static Parser characterClass(char start, char end) {
+	public static Parser lower() { return characterRange('a','z'); }
+	public static Parser characterRange(char start, char end) {
 		return new CharacterRange(start, end);
 	}
-	public static Parser upper() {
-		return characterClass('A','Z');
-	}
-	public static Parser alpha() {
-		return alternation(lower(),upper());
-	}
-	public static Parser digit() {
-		return characterClass('0','9');
-	}
+	public static Parser upper() { return characterRange('A','Z'); }
+	public static Parser alpha() { return alternation(lower(),upper()); }
+	public static Parser digit() { return characterRange('0','9'); }
 	public static Parser parens(Parser parser) {
 		return catenation(symbol('('),parser,symbol(')'));
 	}
