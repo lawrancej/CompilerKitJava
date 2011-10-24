@@ -1,6 +1,6 @@
 package com.joeylawrance.language;
 
-public class CharacterRange extends EquivalentExpression {
+class CharacterRange extends EquivalentExpression {
 	char start, end;
 	public CharacterRange(char start, char end) {
 		if (start < end) {

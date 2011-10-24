@@ -25,7 +25,7 @@ public class ContextFree extends Regular {
 			this.start = start;
 		}
 	}
-	protected static abstract class Visitor<T> extends com.joeylawrance.language.Regular.Visitor<T> {
+	protected static abstract class Visitor<T> extends com.joeylawrance.language.RegularVisitor<T> {
 		public abstract T visit(Nonterminal nonterminal);
 		public abstract T visit(CFG cfg);		
 	}
@@ -116,7 +116,7 @@ public class ContextFree extends Regular {
 			return null;
 		}
 	}
-	static class DerivativeVisitor extends com.joeylawrance.language.Regular.DerivativeVisitor {
+	static class DerivativeVisitor extends com.joeylawrance.language.DerivativeVisitor {
 		//FIXME
 		public Parser visit(Nonterminal nonterminal) {
 			Nonterminal result = new Nonterminal (nonterminal.name);
@@ -128,7 +128,7 @@ public class ContextFree extends Regular {
 		}
 //		public HashMap<Pair<Character,Nonterminal>,Nonterminal> map = new HashMap<Pair<Character,Nonterminal>,Nonterminal>();
 	}
-	static class CompactionVisitor extends com.joeylawrance.language.Regular.CompactionVisitor {
+	static class CompactionVisitor extends com.joeylawrance.language.CompactionVisitor {
 		public Parser visit(Nonterminal nonterminal) { // FIXME: doesn't handle S->S|lambda
 			Parser p = visit(nonterminal.node);
 			if (p == emptySet) return emptySet;
@@ -142,7 +142,7 @@ public class ContextFree extends Regular {
 			return new CFG((Nonterminal)start);
 		}		
 	}
-	static class StringVisitor extends com.joeylawrance.language.Regular.StringVisitor {
+	static class StringVisitor extends com.joeylawrance.language.StringVisitor {
 		public String visit(Nonterminal nonterminal) {
 			return nonterminal.name;
 		}

@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 
 import com.joeylawrance.visitor.Visitor;
 
-public abstract class ReflectiveVisitor<T> implements Visitor<Object, T> {
+abstract class ReflectiveVisitor<T> implements Visitor<Object, T> {
 	@SuppressWarnings("unchecked")
 	public T visit(Object object)
 	{

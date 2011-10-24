@@ -7,26 +7,6 @@ import java.util.HashMap;
  * "Derivatives of Regular expressions", by Janus Brzozowski
  */
 public class Regular {
-	/**
-	 * TODO: implement group capture, forward/backward references, tokens, scanning
-	 * TODO: boolean operations on regexes (e.g., not, and)
-	 * TODO: reflective visitor is slow :( maybe use enummap?
-	 */
-
-	protected static abstract class Visitor<T> extends ReflectiveVisitor<T> {
-		// Primitive regular expressions
-		public abstract T visit(EmptySet emptySet);
-		public abstract T visit(EmptyString emptyString);
-		public abstract T visit(Symbol symbol);
-		public abstract T visit(Alternation alternation);
-		public abstract T visit(Catenation catenation);
-		public abstract T visit(KleeneClosure kleeneClosure);
-		
-		// Regular expression extensions
-		public T visit(PositiveClosure positiveClosure) { return visit(positiveClosure.equivalent); }
-		public T visit(Times times) { return visit(times.equivalent); }
-		public T visit(CharacterRange characterRange) { return visit(characterRange.equivalent); }
-	}
 	public static final EmptyString emptyString = new EmptyString();
 	public static final EmptySet emptySet = new EmptySet();
 	static final HashMap<Character, Symbol> flyweight = new HashMap<Character, Symbol>();
@@ -65,104 +45,8 @@ public class Regular {
 	public static Parser times (Parser r, int k) {
 		return new Times(r, k);
 	}
-	static class NullableVisitor extends Visitor<Parser> {
-		public Parser visit(EmptySet emptySet)       { return emptySet; }
-		public Parser visit(EmptyString emptyString) { return emptyString; }
-		public Parser visit(Symbol symbol)           { return emptySet; }
-		public Parser visit(Alternation alternation) {
-			Parser left = visit(alternation.left);
-			Parser right = visit(alternation.right);
-			if (left == emptyString || right == emptyString)
-				return emptyString;
-			else return emptySet;
-		}
-		public Parser visit(Catenation catenation) {
-			Parser left = visit(catenation.left);
-			Parser right = visit(catenation.right);
-			if (left == emptySet || right == emptySet) {
-				return emptySet;
-			} else return emptyString;
-		}
-		public Parser visit(KleeneClosure kleeneClosure) { return emptyString; }
-	}
-	public static final NullableVisitor nullable = new NullableVisitor();
-	static class DerivativeVisitor extends Visitor<Parser> {
-		public char c;
-		public DerivativeVisitor() {}
-		public DerivativeVisitor(char c)             { this.c = c; }
-		public Parser visit(EmptySet emptySet)       { return emptySet; }
-		public Parser visit(EmptyString emptyString) { return emptySet; }
-		public Parser visit(Symbol symbol)           { return (symbol.c == c) ? emptyString : emptySet; }
-		public Parser visit(Alternation alternation) {
-			return new Alternation (visit(alternation.left), visit(alternation.right));
-		}
-		public Parser visit(Catenation catenation) {
-			return new Alternation (
-					new Catenation (visit(catenation.left), catenation.right),
-					new Catenation (nullable.visit(catenation.left),visit(catenation.right)));
-		}
-		public Parser visit(KleeneClosure kleeneClosure) {
-			return new Catenation (visit(kleeneClosure.node), kleeneClosure);
-		}
-		public Parser visit(CharacterRange characterRange) {
-			return (characterRange.start < c && c < characterRange.end) ? emptyString : emptySet;
-		}
-	}
-	static class CompactionVisitor extends Visitor<Parser> {
-		public Parser visit(EmptySet emptySet)       { return emptySet; }
-		public Parser visit(EmptyString emptyString) { return emptyString; }
-		public Parser visit(Symbol symbol)           { return symbol; }
-		public Parser visit(Alternation alternation) {
-			Parser left = visit(alternation.left);
-			Parser right = visit(alternation.right);
-			if (left == emptySet) return right;
-			else if (right == emptySet) return left;
-			else return new Alternation(left, right);
-		}
-		public Parser visit(Catenation catenation) {
-			Parser left = visit(catenation.left);
-			Parser right = visit(catenation.right);
-			if (left == emptyString) return right;
-			else if (left == emptySet) return emptySet;
-			else return new Catenation(left, right);
-		}
-		public Parser visit(KleeneClosure kleeneClosure) {
-			return new KleeneClosure(visit(kleeneClosure.node));
-		}
-	}
+	static final NullableVisitor nullable = new NullableVisitor();
 	static final CompactionVisitor compactor = new CompactionVisitor();
-	static class StringVisitor extends Visitor<String> {
-		public String visit(EmptySet emptySet)       { return "{}"; }
-		public String visit(EmptyString emptyString) { return "λ"; }
-		public String visit(Symbol symbol)           { return "" + symbol.c; }
-		public String visit(Alternation alternation) {
-			return visit(alternation.left) + "|" + visit(alternation.right);
-		}
-		public String visit(Catenation catenation) { // TODO:  maybe materialize new classes: {m,n}, character class, .?
-			StringBuilder sb = new StringBuilder();
-			if (catenation.left instanceof Alternation)
-				sb.append("(" + visit(catenation.left) + ")");
-			else
-				sb.append(visit(catenation.left));
-			if (catenation.right instanceof Alternation)
-				sb.append("(" + visit(catenation.right) + ")");
-			else
-				sb.append(visit(catenation.right));
-			return sb.toString();
-		}
-		public String visit(KleeneClosure kleeneClosure) {
-			return "(" + visit(kleeneClosure.node) + ")*";
-		}
-		public String visit(PositiveClosure positiveClosure) {
-			return "(" + visit(positiveClosure.node) + ")+";
-		}
-		public String visit(Times times) {
-			return "(" + visit(times.node) + "){" + times.k + "}";
-		}
-		public String visit(CharacterRange characterRange) {
-			return "[" + characterRange.start + "-" + characterRange.end + "]";
-		}
-	}
 	public static Parser lower() { return characterRange('a','z'); }
 	public static Parser characterRange(char start, char end) {
 		return new CharacterRange(start, end);
