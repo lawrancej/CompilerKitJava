@@ -1,3 +1,6 @@
 package com.joeylawrance.visitor;
 
-public interface Visitor <S,T> { public T visit (S node); }
+public abstract class Visitor <S,T> { 
+	S root;
+	public abstract T visit (S node);
+}

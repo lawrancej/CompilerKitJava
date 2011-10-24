@@ -23,7 +23,7 @@ public class LookupVisitorTest {
 	}
 	static class StringVisitor extends LookupVisitor<Visitable,String> {
 		StringVisitor() {
-			this.register(Component.class, new Visitor<Component,String>() {
+			this.register(new Visitor<Component,String>() {
 				@Override
 				public String visit(Component node) {
 					StringBuffer buf = new StringBuffer();
@@ -33,7 +33,7 @@ public class LookupVisitorTest {
 					return buf.toString();
 				}
 			});
-			this.register(Leaf.class, new Visitor<Leaf,String>() {
+			this.register(new Visitor<Leaf,String>() {
 				@Override
 				public String visit(Leaf node) {
 					return node.str;
@@ -42,8 +42,17 @@ public class LookupVisitorTest {
 		}
 	}
 	public static void main(String[] args) {
-		Component c = component(leaf("hello"),leaf("world"));
+		Component c = component(leaf("0"));
 		StringVisitor sv = new StringVisitor();
+		System.out.println(sv.visit(c));
+		for (int i = 1; i < 1000; i++) {
+			Leaf[] line = new Leaf[1000];
+			line[0] = leaf("0");
+			for (int j = 1; j < 1000; j++) {
+				line[j] = leaf(" "+j);
+			}
+			c = component(c,component(line),leaf("\n"));
+		}
 		System.out.println(sv.visit(c));
 	}
 }
