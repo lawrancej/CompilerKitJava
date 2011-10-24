@@ -7,6 +7,11 @@ import java.util.HashMap;
  * "Derivatives of Regular expressions", by Janus Brzozowski
  */
 public class Regular {
+	/**
+	 * TODO: implement group capture, forward/backward references, tokens, scanning
+	 * TODO: boolean operations on regexes (e.g., not, and)
+	 */
+
 	protected static abstract class Visitor<T> extends ReflectiveVisitor<T> {
 		// Primitive regular expressions
 		public abstract T visit(EmptySet emptySet);

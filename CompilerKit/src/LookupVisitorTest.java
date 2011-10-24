@@ -42,6 +42,7 @@ public class LookupVisitorTest {
 		}
 	}
 	public static void main(String[] args) {
+		long before = System.currentTimeMillis();
 		Component c = component(leaf("0"));
 		PrintVisitor sv = new PrintVisitor();
 		sv.visit(c);
@@ -54,5 +55,6 @@ public class LookupVisitorTest {
 			c = component(c,component(line),leaf("\n"));
 		}
 		sv.visit(c);
+		System.out.println(System.currentTimeMillis() - before);
 	}
 }
