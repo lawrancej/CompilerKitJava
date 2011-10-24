@@ -18,11 +18,10 @@ import java.util.HashMap;
  * 		}
  * }
  */
-public class LookupVisitor<S,T> extends Visitor<S,T> {
+public class LookupVisitor<S,T> implements Visitor<S,T> {
 	private HashMap <Class<? extends S>, Visitor<? extends S,T>> map = new HashMap <Class<? extends S>, Visitor<? extends S,T>>();
-	@SuppressWarnings("unchecked")
-	public void register(Visitor<? extends S,T> visitor) {
-		map.put((Class<? extends S>)visitor.root.getClass(),visitor);
+	public void register(Class<? extends S> klass, Visitor<? extends S,T> visitor) {
+		map.put(klass,visitor);
 	}
 	@SuppressWarnings("unchecked")
 	public T visit(S node) {

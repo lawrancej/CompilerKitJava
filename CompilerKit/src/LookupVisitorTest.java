@@ -21,38 +21,38 @@ public class LookupVisitorTest {
 		l.str = str;
 		return l;
 	}
-	static class StringVisitor extends LookupVisitor<Visitable,String> {
-		StringVisitor() {
-			this.register(new Visitor<Component,String>() {
+	static class PrintVisitor extends LookupVisitor<Visitable,Void> {
+		PrintVisitor() {
+			this.register(Component.class, new Visitor<Component,Void>() {
 				@Override
-				public String visit(Component node) {
-					StringBuffer buf = new StringBuffer();
+				public Void visit(Component node) {
 					for (Visitable v : node.nodes) {
-						buf.append(StringVisitor.this.visit(v));
+						PrintVisitor.this.visit(v);
 					}
-					return buf.toString();
+					return null;
 				}
 			});
-			this.register(new Visitor<Leaf,String>() {
+			this.register(Leaf.class, new Visitor<Leaf,Void>() {
 				@Override
-				public String visit(Leaf node) {
-					return node.str;
+				public Void visit(Leaf node) {
+					System.out.print(node.str);
+					return null;
 				}
 			});
 		}
 	}
 	public static void main(String[] args) {
 		Component c = component(leaf("0"));
-		StringVisitor sv = new StringVisitor();
-		System.out.println(sv.visit(c));
+		PrintVisitor sv = new PrintVisitor();
+		sv.visit(c);
 		for (int i = 1; i < 1000; i++) {
 			Leaf[] line = new Leaf[1000];
 			line[0] = leaf("0");
 			for (int j = 1; j < 1000; j++) {
-				line[j] = leaf(" "+j);
+				line[j] = leaf(" "+(i+j));
 			}
 			c = component(c,component(line),leaf("\n"));
 		}
-		System.out.println(sv.visit(c));
+		sv.visit(c);
 	}
 }
