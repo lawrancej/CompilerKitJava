@@ -7,31 +7,6 @@ import java.util.HashMap;
  * "Derivatives of Regular expressions", by Janus Brzozowski
  */
 public class Regular {
-	/**
-	 * TODO: implement group capture, forward/backward references, tokens, scanning
-	 * TODO: boolean operations on regexes (e.g., not, and)
-	 * TODO: need to find an alternative to reflection. I think some sort of locator using instanceof would do wonders.
-	 */
-	/**
-	 * Abstract superclass for all parser combinator classes.
-	 * Uses the Composite and Visitor design patterns.
-	 */
-	public static abstract class Parser { // Probably should move out of regular
-		public abstract ReflectiveVisitor<String> getPrinter();
-		public String toString () {
-			return getPrinter().visit(this);
-		}
-		public boolean recognize (CharSequence str) { // Move outside, because of visibility issues and besides, this wont work with Regular and Context-Free
-			Parser parser = this;
-			DerivativeVisitor derivative = new DerivativeVisitor();
-			for (int i = 0; i < str.length(); i++) {
-				derivative.c = str.charAt(i);
-				parser = derivative.visit(parser);
-				parser = compactor.visit(parser);
-			}
-			return nullable.visit(parser) == emptyString;
-		}
-	}
 	protected static abstract class Visitor<T> extends ReflectiveVisitor<T> {
 		// Primitive regular expressions
 		public abstract T visit(EmptySet emptySet);
@@ -50,26 +25,13 @@ public class Regular {
 			return new StringVisitor();
 		}
 	}
-	static class EmptyString extends Expression {}
 	public static final EmptyString emptyString = new EmptyString();
-	static class EmptySet extends Expression {}
 	public static final EmptySet emptySet = new EmptySet();
-	static class Symbol extends Expression {
-		final char c;
-		public Symbol (char c) { this.c = c; }
-	}
 	static final HashMap<Character, Symbol> flyweight = new HashMap<Character, Symbol>();
 	public static Symbol symbol (char c) {
 		if (!flyweight.containsKey(c))
 			flyweight.put(c, new Symbol(c));
 		return flyweight.get(c);
-	}
-	static class BinaryOperator extends Expression {
-		Parser left, right;		
-		public BinaryOperator (Parser left, Parser right) { this.left = left; this.right = right; }
-	}
-	static class Alternation extends BinaryOperator {
-		public Alternation(Parser left, Parser right) { super(left, right); }
 	}
 	public static Alternation alternation (Parser ... regexen) {
 		Parser current = regexen[0];
@@ -77,9 +39,6 @@ public class Regular {
 			current = new Alternation (current, regexen[i]);
 		}
 		return (Alternation) current;
-	}
-	static class Catenation extends BinaryOperator {
-		public Catenation(Parser left, Parser right) { super(left, right); }
 	}
 	public static Catenation catenation (Parser ... regexen) {
 		Parser current = regexen[0];
@@ -95,36 +54,11 @@ public class Regular {
 		}
 		return catenation(symbols);
 	}
-	static class KleeneClosure extends Expression {
-		Parser node;
-		public KleeneClosure (Parser node) { this.node = node; }
-	}
 	public static KleeneClosure kleeneClosure (Parser regex) {
 		return new KleeneClosure(regex);
 	}
-	static class EquivalentExpression extends Expression {
-		Parser equivalent;
-		Parser node;
-	}
-	static class PositiveClosure extends EquivalentExpression {
-		public PositiveClosure (Parser node) {
-			this.equivalent = catenation(node, kleeneClosure(node));
-			this.node = node;
-		}
-	}
 	public static Parser positiveClosure (Parser r) {
 		return new PositiveClosure(r);
-	}
-	static class Times extends EquivalentExpression {
-		int k;
-		public Times (Parser node, int k) {
-			Parser[] parsers = new Parser[k];
-			for (int i = 0; i < k; i++)
-				parsers[i] = node;
-			this.equivalent = catenation(parsers);
-			this.node = node;
-			this.k = k;
-		}
 	}
 	public static Parser times (Parser r, int k) {
 		return new Times(r, k);
