@@ -2,6 +2,8 @@ package com.joeylawrance.language;
 
 import java.util.ArrayList;
 
+import com.joeylawrance.visitor.ReflectiveVisitor;
+
 /**
  * Matches Context-free grammars using derivatives.
  * References:
