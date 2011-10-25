@@ -19,6 +19,7 @@ abstract class RegularVisitor<T> extends ReflectiveVisitor<T> {
 	public abstract T visit(Alternation alternation);
 	public abstract T visit(Catenation catenation);
 	public abstract T visit(KleeneClosure kleeneClosure);
+	public abstract T visit(Complement not);
 	
 	// Regular expression extensions.
 	// By default, use the equivalent expressions defined in terms of the primitives above

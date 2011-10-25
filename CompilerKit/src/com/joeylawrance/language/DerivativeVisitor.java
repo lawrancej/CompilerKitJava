@@ -44,6 +44,11 @@ class DerivativeVisitor extends RegularVisitor<Parser> {
 //				new Catenation (visit(catenation.left), catenation.right),
 //				new Catenation (NullableVisitor.nullable.visit(catenation.left),visit(catenation.right)));
 	}
+	public Parser visit(Complement not) {
+//		Parser notNode = visit(not.node);
+//		if (notNode == EmptyString)
+		return new Complement(visit(not.node));
+	}
 	public Parser visit(KleeneClosure kleeneClosure) {
 		Parser left = visit(kleeneClosure.node);
 		if (left == EmptyString.emptyString) return kleeneClosure;

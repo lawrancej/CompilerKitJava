@@ -10,7 +10,7 @@ import com.joeylawrance.visitor.Visitor;
 public class LookupVisitorTest {
 	public static class SlowPrintVisitor extends ReflectiveVisitor<Void> {
 		public Void visit(Component node) {
-			for (Visitable v : node.nodes) {
+			for (IndexedVisitable v : node.nodes) {
 				this.visit(v);
 			}
 			return null;
@@ -50,7 +50,7 @@ public class LookupVisitorTest {
 			this.register(Component.class, new Visitor<Component,Void>() {
 				@Override
 				public Void visit(Component node) {
-					for (Visitable v : node.nodes) {
+					for (IndexedVisitable v : node.nodes) {
 						PrintVisitor.this.visit(v);
 					}
 					return null;

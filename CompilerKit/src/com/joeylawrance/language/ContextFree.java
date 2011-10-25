@@ -50,6 +50,10 @@ public class ContextFree extends Regular {
 			visit(kleeneClosure.node);
 			return null;
 		}
+		public Void visit(Complement not) {
+			visit(not.node);
+			return null;
+		}
 		public Void visit(Nonterminal nonterminal) {
 			// Halt on a rule like: S -> S
 			if (!grammar.nonterminals.contains(nonterminal)) {
@@ -114,6 +118,11 @@ public class ContextFree extends Regular {
 			return null;
 		}
 		public Parser visit(CFG cfg) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		@Override
+		public Parser visit(Complement not) {
 			// TODO Auto-generated method stub
 			return null;
 		}

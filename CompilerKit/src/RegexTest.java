@@ -11,6 +11,9 @@ public class RegexTest {
 		System.out.println(r.recognize("somebody@bridgew.edu"));
 		System.out.println(r.recognize("somebody@wit.edu"));
 		System.out.println(System.currentTimeMillis() - before); // 183ms is bad
+		r = catenation(not(symbol('\n')), string("\n"));
+		System.out.println(r);
+		System.out.println(r.recognize("abc\na"));
 	}
 
 }

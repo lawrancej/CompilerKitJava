@@ -25,7 +25,8 @@ public class Regular {
 		}
 		return (Catenation) current;
 	}
-	public static Catenation string (String str) {
+	public static Parser string (String str) {
+		if (str.length() == 1) return symbol(str.charAt(0));
 		Symbol[] symbols = new Symbol[str.length()];
 		for (int i = 0; i < str.length(); i++) {
 			symbols[i] = symbol(str.charAt(i));
@@ -49,4 +50,5 @@ public class Regular {
 		return catenation(symbol('('),parser,symbol(')'));
 	}
 	public static Parser optional(Parser parser) { return new Optional(parser); }
+	public static Parser not(Parser parser) { return new Complement(parser); }
 }

@@ -1,5 +1,6 @@
 package com.joeylawrance.language;
 
+// FIXME: unescape escape sequences
 class StringVisitor extends RegularVisitor<String> {
 	public String visit(EmptySet emptySet)       { return "{}"; }
 	public String visit(EmptyString emptyString) { return "λ"; }
@@ -34,6 +35,10 @@ class StringVisitor extends RegularVisitor<String> {
 		return "[" + characterRange.start + "-" + characterRange.end + "]";
 	}
 	public String visit(Optional option) {
-		return "(" + option.node + ")?";
+		return "(" + visit(option.node) + ")?";
+	}
+	@Override
+	public String visit(Complement not) {
+		return "(" + visit(not.node) + ")'";
 	}
 }

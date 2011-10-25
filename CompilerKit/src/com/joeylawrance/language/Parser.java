@@ -7,7 +7,7 @@ import com.joeylawrance.visitor.ReflectiveVisitor;
  * Abstract superclass for all parser combinator classes.
  * Uses the Composite and Visitor design patterns.
  */
-public abstract class Parser { // Probably should move out of regular
+public abstract class Parser {
 	public abstract ReflectiveVisitor<String> getPrinter();
 	public String toString () {
 		return getPrinter().visit(this);
@@ -17,7 +17,9 @@ public abstract class Parser { // Probably should move out of regular
 		DerivativeVisitor derivative = new DerivativeVisitor();
 		for (int i = 0; i < str.length(); i++) {
 			derivative.c = str.charAt(i);
+//			System.out.print(derivative.c);
 			parser = derivative.visit(parser);
+//			System.out.println(parser);
 			if (parser == EmptySet.emptySet) break;
 		}
 		return NullableVisitor.nullable.visit(parser) == EmptyString.emptyString;

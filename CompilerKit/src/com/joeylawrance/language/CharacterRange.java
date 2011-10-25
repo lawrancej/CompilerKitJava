@@ -1,5 +1,6 @@
 package com.joeylawrance.language;
 
+// TODO: Extend to allow multiple ranges, negation, single characters
 class CharacterRange extends EquivalentExpression {
 	char start, end;
 	public CharacterRange(char start, char end) {
