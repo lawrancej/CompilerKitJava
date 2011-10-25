@@ -33,4 +33,7 @@ class StringVisitor extends RegularVisitor<String> {
 	public String visit(CharacterRange characterRange) {
 		return "[" + characterRange.start + "-" + characterRange.end + "]";
 	}
+	public String visit(Optional option) {
+		return "(" + option.node + ")?";
+	}
 }
