@@ -16,8 +16,8 @@ public abstract class Parser { // Probably should move out of regular
 		for (int i = 0; i < str.length(); i++) {
 			derivative.c = str.charAt(i);
 			parser = derivative.visit(parser);
-			parser = Regular.compactor.visit(parser);
+			parser = CompactionVisitor.compactor.visit(parser);
 		}
-		return Regular.nullable.visit(parser) == Regular.emptyString;
+		return NullableVisitor.nullable.visit(parser) == EmptyString.emptyString;
 	}
 }

@@ -1,5 +1,4 @@
 package com.joeylawrance.language;
-import java.util.HashMap;
 
 /**
  * Matches regular expressions using derivatives.
@@ -7,13 +6,10 @@ import java.util.HashMap;
  * "Derivatives of Regular expressions", by Janus Brzozowski
  */
 public class Regular {
-	public static final EmptyString emptyString = new EmptyString();
-	public static final EmptySet emptySet = new EmptySet();
-	static final HashMap<Character, Symbol> flyweight = new HashMap<Character, Symbol>();
 	public static Symbol symbol (char c) {
-		if (!flyweight.containsKey(c))
-			flyweight.put(c, new Symbol(c));
-		return flyweight.get(c);
+		if (!Symbol.flyweight.containsKey(c))
+			Symbol.flyweight.put(c, new Symbol(c));
+		return Symbol.flyweight.get(c);
 	}
 	public static Alternation alternation (Parser ... regexen) {
 		Parser current = regexen[0];
@@ -45,8 +41,6 @@ public class Regular {
 	public static Parser times (Parser r, int k) {
 		return new Times(r, k);
 	}
-	static final NullableVisitor nullable = new NullableVisitor();
-	static final CompactionVisitor compactor = new CompactionVisitor();
 	public static Parser lower() { return characterRange('a','z'); }
 	public static Parser characterRange(char start, char end) {
 		return new CharacterRange(start, end);

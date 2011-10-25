@@ -74,7 +74,7 @@ public class ContextFree extends Regular {
 				newNode = catenation(nodes);
 			else if (nodes.length == 1)
 				newNode = nodes[0];
-			else newNode = emptyString;
+			else newNode = EmptyString.emptyString;
 			
 			// If the nonterminal doesn't have a node, it's newNode
 			// Otherwise, its the existing node or newNode
@@ -92,7 +92,7 @@ public class ContextFree extends Regular {
 	static class FixedPointVisitor extends Visitor<Parser> {
 		public Parser visit(EmptySet emptySet) { return emptySet; }
 		public Parser visit(EmptyString emptyString) { return emptyString; }  // Should really be the set containing the empty string
-		public Parser visit(Symbol symbol) { return emptySet; }
+		public Parser visit(Symbol symbol) { return EmptySet.emptySet; }
 		//FIXME
 		public Parser visit(Alternation alternation) {
 			return visit(alternation.left);
@@ -131,14 +131,14 @@ public class ContextFree extends Regular {
 	static class CompactionVisitor extends com.joeylawrance.language.CompactionVisitor {
 		public Parser visit(Nonterminal nonterminal) { // FIXME: doesn't handle S->S|lambda
 			Parser p = visit(nonterminal.node);
-			if (p == emptySet) return emptySet;
+			if (p == EmptySet.emptySet) return EmptySet.emptySet;
 			Nonterminal result = new Nonterminal(nonterminal.name);
 			result.becomes(p);
 			return result;
 		}
 		public Parser visit(CFG cfg) {
 			Parser start = visit(cfg.start);
-			if (start == emptySet) return emptySet;
+			if (start == EmptySet.emptySet) return EmptySet.emptySet;
 			return new CFG((Nonterminal)start);
 		}		
 	}
