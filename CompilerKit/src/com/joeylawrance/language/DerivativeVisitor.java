@@ -1,6 +1,7 @@
 package com.joeylawrance.language;
 
 class DerivativeVisitor extends RegularVisitor<Parser> {
+	// TODO: use memoization for performance improvements?
 	public char c;
 	public DerivativeVisitor() {}
 	public DerivativeVisitor(char c)             { this.c = c; }

@@ -22,4 +22,5 @@ abstract class RegularVisitor<T> extends ReflectiveVisitor<T> {
 	public T visit(PositiveClosure positiveClosure) { return visit(positiveClosure.equivalent); }
 	public T visit(Times times) { return visit(times.equivalent); }
 	public T visit(CharacterRange characterRange) { return visit(characterRange.equivalent); }
+	public T visit(Optional optional) { return visit(optional.equivalent); }
 }

@@ -35,14 +35,11 @@ public class Regular {
 	public static KleeneClosure kleeneClosure (Parser regex) {
 		return new KleeneClosure(regex);
 	}
-	public static Parser positiveClosure (Parser r) {
-		return new PositiveClosure(r);
-	}
-	public static Parser times (Parser r, int k) {
-		return new Times(r, k);
-	}
-	public static Parser lower() { return characterRange('a','z'); }
-	public static Parser characterRange(char start, char end) {
+	public static PositiveClosure positiveClosure (Parser r) { return new PositiveClosure(r); }
+	public static Times times (Parser r, int k) { return new Times(r, k); }
+	public static Times times (Parser r, int lo, int hi) { return new Times(r, lo, hi); }
+	public static CharacterRange lower() { return characterRange('a','z'); }
+	public static CharacterRange characterRange(char start, char end) {
 		return new CharacterRange(start, end);
 	}
 	public static Parser upper() { return characterRange('A','Z'); }
@@ -51,4 +48,5 @@ public class Regular {
 	public static Parser parens(Parser parser) {
 		return catenation(symbol('('),parser,symbol(')'));
 	}
+	public static Parser optional(Parser parser) { return new Optional(parser); }
 }

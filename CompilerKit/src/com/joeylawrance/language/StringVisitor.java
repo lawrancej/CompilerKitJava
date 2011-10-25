@@ -26,7 +26,9 @@ class StringVisitor extends RegularVisitor<String> {
 		return "(" + visit(positiveClosure.node) + ")+";
 	}
 	public String visit(Times times) {
-		return "(" + visit(times.node) + "){" + times.k + "}";
+		if (times.lo != times.hi)
+			return "(" + visit(times.node) + "){" + times.lo + "," + times.hi + "}";
+		else return "(" + visit(times.node) + "){" + times.hi + "}";
 	}
 	public String visit(CharacterRange characterRange) {
 		return "[" + characterRange.start + "-" + characterRange.end + "]";
