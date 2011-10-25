@@ -4,8 +4,9 @@ import com.joeylawrance.visitor.ReflectiveVisitor;
 
 /**
  * TODO: implement group capture, forward/backward references, tokens, scanning
- * TODO: boolean operations on regexes (e.g., not, and)
- * TODO: reflective visitor is slow :( maybe use enummap?
+ * TODO: set operations on regexes (e.g., intersection, difference)
+ * TODO: implement Terminal?
+ * TODO: reflective visitor may be slow :( maybe use enummap?
  * in theory, you'd have interfaces instead of abstract classes
  * in theory, you could split this class into primitive and extended visitors
  * need lazy set and it'd be nice to do lambda calc on side

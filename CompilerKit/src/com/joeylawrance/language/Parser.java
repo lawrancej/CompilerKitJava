@@ -2,7 +2,7 @@ package com.joeylawrance.language;
 
 import com.joeylawrance.visitor.ReflectiveVisitor;
 
-
+// TODO: Allow recognize to work on abitrary streams? make generic? this would also affect derivative visitor
 /**
  * Abstract superclass for all parser combinator classes.
  * Uses the Composite and Visitor design patterns.

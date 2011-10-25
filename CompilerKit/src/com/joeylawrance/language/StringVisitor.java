@@ -8,7 +8,7 @@ class StringVisitor extends RegularVisitor<String> {
 	public String visit(Alternation alternation) {
 		return visit(alternation.left) + "|" + visit(alternation.right);
 	}
-	public String visit(Catenation catenation) { // TODO:  maybe materialize new classes: {m,n}, character class, .?
+	public String visit(Catenation catenation) {
 		StringBuilder sb = new StringBuilder();
 		if (catenation.left instanceof Alternation)
 			sb.append("(" + visit(catenation.left) + ")");
