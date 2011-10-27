@@ -5,6 +5,7 @@ import java.util.HashMap;
 class Symbol extends Expression {
 	final char c;
 	static final HashMap<Character, Symbol> flyweight = new HashMap<Character, Symbol>();
+	// Limit construction to use memory wisely
 	private Symbol (char c) { this.c = c; }
 	public static Symbol symbol (char c) {
 		if (!flyweight.containsKey(c))
