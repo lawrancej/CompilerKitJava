@@ -4,7 +4,6 @@ import com.joeylawrance.visitor.ReflectiveVisitor;
 
 /**
  * TODO: implement group capture, forward/backward references, tokens, scanning
- * TODO: set operations on regexes (e.g., intersection, difference (just intersect the complement)
  * TODO: implement Terminal?
  * in theory, you'd have interfaces instead of abstract classes
  * in theory, you could split this class into primitive and extended visitors
@@ -28,4 +27,5 @@ abstract class RegularVisitor<T> extends ReflectiveVisitor<T> {
 	public T visit(Times times) { return visit(times.equivalent); }
 	public T visit(CharacterRange characterRange) { return visit(characterRange.equivalent); }
 	public T visit(Optional optional) { return visit(optional.equivalent); }
+	public T visit(Difference difference) { return visit(difference.equivalent); }
 }

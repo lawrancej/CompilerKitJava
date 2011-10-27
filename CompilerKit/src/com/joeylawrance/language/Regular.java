@@ -43,4 +43,5 @@ public class Regular {
 	public static Parser optional(Parser parser) { return new Optional(parser); }
 	public static Parser not(Parser parser) { return new Complement(parser); }
 	public static Parser intersection(Parser ... parsers) { return Intersection.intersection(parsers); }
+	public static Parser difference(Parser left, Parser right) {return new Difference(left, right); }
 }

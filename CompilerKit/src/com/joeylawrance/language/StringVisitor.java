@@ -37,11 +37,9 @@ class StringVisitor extends RegularVisitor<String> {
 	public String visit(Optional option) {
 		return "(" + visit(option.node) + ")?";
 	}
-	@Override
 	public String visit(Complement not) {
 		return "(" + visit(not.node) + ")'";
 	}
-	@Override
 	public String visit(Intersection intersection) {
 		StringBuilder sb = new StringBuilder();
 		if (intersection.left instanceof Alternation)
@@ -53,6 +51,19 @@ class StringVisitor extends RegularVisitor<String> {
 			sb.append("(" + visit(intersection.right) + ")");
 		else
 			sb.append(visit(intersection.right));
+		return sb.toString();
+	}
+	public String visit(Difference difference) {
+		StringBuilder sb = new StringBuilder();
+		if (difference.left instanceof Alternation)
+			sb.append("(" + visit(difference.left) + ")");
+		else
+			sb.append(visit(difference.left));
+		sb.append("-");
+		if (difference.right instanceof Alternation)
+			sb.append("(" + visit(difference.right) + ")");
+		else
+			sb.append(visit(difference.right));
 		return sb.toString();
 	}
 }

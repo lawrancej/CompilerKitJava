@@ -14,9 +14,9 @@ public class RegexTest {
 		r = catenation(not(symbol('\n')), string("\n"));
 		System.out.println(r);
 		System.out.println(r.recognize("abc\n\n"));
-		r = intersection(alnum(),digit());
+		r = difference(alnum(),digit());
 		System.out.println(r);
-		System.out.println(r.recognize("9"));
+		System.out.println(r.recognize("a"));
 		
 	}
 
