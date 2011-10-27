@@ -25,8 +25,8 @@ class Times extends EquivalentExpression {
 		this.node = node;
 	}
 	public static void main(String[] args) {
-		Times times = new Times(new Symbol('B'),5);
+		Times times = new Times(Symbol.symbol('B'),5);
 		DerivativeVisitor derivative = new DerivativeVisitor('B');
-		System.out.println(CompactionVisitor.compactor.visit(derivative.visit(times)));
+		System.out.println(derivative.visit(times));
 	}
 }

@@ -7,9 +7,7 @@ package com.joeylawrance.language;
  */
 public class Regular {
 	public static Symbol symbol (char c) {
-		if (!Symbol.flyweight.containsKey(c))
-			Symbol.flyweight.put(c, new Symbol(c));
-		return Symbol.flyweight.get(c);
+		return Symbol.symbol(c);
 	}
 	public static Alternation alternation (Parser ... regexen) {
 		Parser current = regexen[0];
@@ -26,10 +24,10 @@ public class Regular {
 		return (Catenation) current;
 	}
 	public static Parser string (String str) {
-		if (str.length() == 1) return symbol(str.charAt(0));
+		if (str.length() == 1) return Symbol.symbol(str.charAt(0));
 		Symbol[] symbols = new Symbol[str.length()];
 		for (int i = 0; i < str.length(); i++) {
-			symbols[i] = symbol(str.charAt(i));
+			symbols[i] = Symbol.symbol(str.charAt(i));
 		}
 		return catenation(symbols);
 	}
@@ -47,7 +45,7 @@ public class Regular {
 	public static Parser alpha() { return alternation(lower(),upper()); }
 	public static Parser digit() { return characterRange('0','9'); }
 	public static Parser parens(Parser parser) {
-		return catenation(symbol('('),parser,symbol(')'));
+		return catenation(Symbol.symbol('('),parser,Symbol.symbol(')'));
 	}
 	public static Parser optional(Parser parser) { return new Optional(parser); }
 	public static Parser not(Parser parser) { return new Complement(parser); }

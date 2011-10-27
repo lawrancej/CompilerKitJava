@@ -12,7 +12,7 @@ class CharacterRange extends EquivalentExpression {
 		}
 		Symbol[] symbol = new Symbol[this.end + 1 - this.start];
 		for (char c = this.start; c <= this.end; c++) {
-			symbol[c-this.start] = Regular.symbol(c);
+			symbol[c-this.start] = Symbol.symbol(c);
 		}
 		this.node = this;
 		this.equivalent = Regular.alternation(symbol);
