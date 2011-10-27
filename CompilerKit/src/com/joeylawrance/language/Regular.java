@@ -10,11 +10,7 @@ public class Regular {
 		return Symbol.symbol(c);
 	}
 	public static Alternation alternation (Parser ... regexen) {
-		Parser current = regexen[0];
-		for (int i = 1; i < regexen.length; i++) {
-			current = new Alternation (current, regexen[i]);
-		}
-		return (Alternation) current;
+		return Alternation.alternation(regexen);
 	}
 	public static Catenation catenation (Parser ... regexen) {
 		Parser current = regexen[0];
@@ -42,7 +38,7 @@ public class Regular {
 		return new CharacterRange(start, end);
 	}
 	public static Parser upper() { return characterRange('A','Z'); }
-	public static Parser alpha() { return alternation(lower(),upper()); }
+	public static Parser alpha() { return Alternation.alternation(lower(),upper()); }
 	public static Parser digit() { return characterRange('0','9'); }
 	public static Parser parens(Parser parser) {
 		return catenation(Symbol.symbol('('),parser,Symbol.symbol(')'));

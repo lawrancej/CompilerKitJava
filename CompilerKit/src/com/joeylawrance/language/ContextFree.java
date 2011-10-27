@@ -87,7 +87,7 @@ public class ContextFree extends Regular {
 			if (node == null) {
 				node = newNode;
 			} else {
-				node = alternation(node,newNode);
+				node = Alternation.alternation(node,newNode);
 			}
 		}
 		public <T> T accept(Visitor<T> v) { return v.visit(this); }

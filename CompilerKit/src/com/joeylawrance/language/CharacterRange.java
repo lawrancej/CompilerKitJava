@@ -15,6 +15,6 @@ class CharacterRange extends EquivalentExpression {
 			symbol[c-this.start] = Symbol.symbol(c);
 		}
 		this.node = this;
-		this.equivalent = Regular.alternation(symbol);
+		this.equivalent = Alternation.alternation(symbol);
 	}
 }
