@@ -1,5 +1,4 @@
 import static com.joeylawrance.language.Regular.*;
-
 import com.joeylawrance.language.Parser;
 
 public class RegexTest {
@@ -17,7 +16,6 @@ public class RegexTest {
 		r = difference(alnum(),digit());
 		System.out.println(r);
 		System.out.println(r.recognize("a"));
-		
 	}
 
 }
