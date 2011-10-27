@@ -16,7 +16,7 @@ public class LookupVisitorTest {
 			return null;
 		}
 		public Void visit(Leaf node) {
-			System.out.print(node.str);
+//			System.out.print(node.str);
 			return null;			
 		}
 	}
@@ -59,7 +59,7 @@ public class LookupVisitorTest {
 			this.register(Leaf.class, new Visitor<Leaf,Void>() {
 				@Override
 				public Void visit(Leaf node) {
-					System.out.print(node.str);
+//					System.out.print(node.str);
 					return null;
 				}
 			});
@@ -67,7 +67,8 @@ public class LookupVisitorTest {
 	}
 	static class IndexedPrintVisitor extends IndexedVisitor<Void> {
 		IndexedPrintVisitor() {
-			this.register(new Visitor<Component,Void>() {
+			super(2);
+			this.register(0,new Visitor<Component,Void>() {
 				@Override
 				public Void visit(Component node) {
 					for (IndexedVisitable v : node.nodes) {
@@ -76,10 +77,10 @@ public class LookupVisitorTest {
 					return null;
 				}
 			});
-			this.register(new Visitor<Leaf,Void>() {
+			this.register(1, new Visitor<Leaf,Void>() {
 				@Override
 				public Void visit(Leaf node) {
-					System.out.print(node.str);
+//					System.out.print(node.str);
 					return null;
 				}
 			});
@@ -94,7 +95,7 @@ public class LookupVisitorTest {
 	}
 	public static Component benchmark() {
 		Component c = component(leaf("0"));
-		for (int i = 1; i < 1000; i++) {
+		for (int i = 1; i < 300; i++) {
 			Leaf[] line = new Leaf[1000];
 			line[0] = leaf("0");
 			for (int j = 1; j < 1000; j++) {

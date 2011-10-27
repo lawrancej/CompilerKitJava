@@ -1,7 +1,5 @@
 package com.joeylawrance.visitor;
 
-import java.util.ArrayList;
-
 /**
  * IndexedVisitor<S,T>
  * 
@@ -19,14 +17,16 @@ import java.util.ArrayList;
  * }
  */
 public class IndexedVisitor<T> implements Visitor<IndexedVisitable,T> {
-	private ArrayList<Visitor<? extends IndexedVisitable, T>> array = new ArrayList<Visitor<? extends IndexedVisitable, T>>();
-	public void register(Visitor<? extends IndexedVisitable, T> visitor) {
-		array.add(visitor);
+	private Visitor<? extends IndexedVisitable, T>[] array;
+	@SuppressWarnings("unchecked")
+	public IndexedVisitor(int size) { array = new Visitor[size]; }
+	public void register(int index, Visitor<? extends IndexedVisitable, T> visitor) {
+		array[index] = visitor;
 	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public T visit(IndexedVisitable node) {
-		return ((Visitor<IndexedVisitable, T>)array.get(node.getIndex())).visit(node);
+		return ((Visitor<IndexedVisitable, T>)array[node.getIndex()]).visit(node);
 	}
 
 }
