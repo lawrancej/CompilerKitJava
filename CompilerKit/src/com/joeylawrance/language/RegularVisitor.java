@@ -4,9 +4,8 @@ import com.joeylawrance.visitor.ReflectiveVisitor;
 
 /**
  * TODO: implement group capture, forward/backward references, tokens, scanning
- * TODO: set operations on regexes (e.g., intersection, difference)
+ * TODO: set operations on regexes (e.g., intersection, difference (just intersect the complement)
  * TODO: implement Terminal?
- * TODO: reflective visitor may be slow :( maybe use enummap?
  * in theory, you'd have interfaces instead of abstract classes
  * in theory, you could split this class into primitive and extended visitors
  * need lazy set and it'd be nice to do lambda calc on side
@@ -17,10 +16,11 @@ abstract class RegularVisitor<T> extends ReflectiveVisitor<T> {
 	public abstract T visit(EmptySet emptySet);
 	public abstract T visit(EmptyString emptyString);
 	public abstract T visit(Symbol symbol);
-	public abstract T visit(Alternation alternation);
+	public abstract T visit(Alternation alternation); // AKA: Union
 	public abstract T visit(Catenation catenation);
 	public abstract T visit(KleeneClosure kleeneClosure);
-	public abstract T visit(Complement not);
+	public abstract T visit(Complement complement); // AKA: negation, inverse
+	public abstract T visit(Intersection intersection);
 	
 	// Regular expression extensions.
 	// By default, use the equivalent expressions defined in terms of the primitives above

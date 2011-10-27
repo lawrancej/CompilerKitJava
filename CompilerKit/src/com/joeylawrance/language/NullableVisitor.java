@@ -20,9 +20,16 @@ class NullableVisitor extends RegularVisitor<Parser> {
 		} else return EmptyString.emptyString;
 	}
 	public Parser visit(KleeneClosure kleeneClosure) { return EmptyString.emptyString; }
-	public Parser visit(Complement not) {
-		if (visit(not.node) == EmptySet.emptySet)
+	public Parser visit(Complement complement) {
+		if (visit(complement.node) == EmptySet.emptySet)
 			return EmptyString.emptyString;
 		else return EmptySet.emptySet;
+	}
+	public Parser visit(Intersection intersection) {
+		Parser left = visit(intersection.left);
+		Parser right = visit(intersection.right);
+		if (left == EmptySet.emptySet || right == EmptySet.emptySet)
+			return EmptySet.emptySet;
+		else return EmptyString.emptyString;
 	}
 }

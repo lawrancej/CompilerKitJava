@@ -22,7 +22,13 @@ class CompactionVisitor extends RegularVisitor<Parser> {
 	public Parser visit(KleeneClosure kleeneClosure) {
 		return new KleeneClosure(visit(kleeneClosure.node));
 	}
-	public Parser visit(Complement not) {
-		return new Complement(visit(not.node));
+	public Parser visit(Complement complement) {
+		return new Complement(visit(complement.node));
+	}
+	public Parser visit(Intersection intersection) {
+		Parser left = visit(intersection.left);
+		Parser right = visit(intersection.right);
+		if (left == right) return right;
+		else return new Intersection(left, right);
 	}
 }

@@ -41,4 +41,18 @@ class StringVisitor extends RegularVisitor<String> {
 	public String visit(Complement not) {
 		return "(" + visit(not.node) + ")'";
 	}
+	@Override
+	public String visit(Intersection intersection) {
+		StringBuilder sb = new StringBuilder();
+		if (intersection.left instanceof Alternation)
+			sb.append("(" + visit(intersection.left) + ")");
+		else
+			sb.append(visit(intersection.left));
+		sb.append("&");
+		if (intersection.right instanceof Alternation)
+			sb.append("(" + visit(intersection.right) + ")");
+		else
+			sb.append(visit(intersection.right));
+		return sb.toString();
+	}
 }

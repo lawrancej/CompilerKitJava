@@ -56,6 +56,11 @@ class DerivativeVisitor extends RegularVisitor<Parser> {
 		return new Catenation (left, kleeneClosure);
 	}
 	public Parser visit(CharacterRange characterRange) {
-		return (characterRange.start < c && c < characterRange.end) ? EmptyString.emptyString : EmptySet.emptySet;
+		return (characterRange.start <= c && c <= characterRange.end) ? EmptyString.emptyString : EmptySet.emptySet;
+	}
+	public Parser visit(Intersection intersection) {
+		Parser left = visit(intersection.left);
+		Parser right = visit(intersection.right);
+		return new Intersection(left, right);
 	}
 }

@@ -68,6 +68,11 @@ public class ContextFree extends Regular {
 			visit(cfg.start);
 			return null;
 		}
+		@Override
+		public Void visit(Intersection intersection) {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 	private static final NonterminalListBuilder builder = new NonterminalListBuilder();
 	public static class Nonterminal extends Grammar {
@@ -123,6 +128,11 @@ public class ContextFree extends Regular {
 		}
 		@Override
 		public Parser visit(Complement not) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		@Override
+		public Parser visit(Intersection intersection) {
 			// TODO Auto-generated method stub
 			return null;
 		}

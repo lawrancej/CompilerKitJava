@@ -18,6 +18,7 @@ public abstract class Parser {
 		for (int i = 0; i < str.length(); i++) {
 			derivative.c = str.charAt(i);
 //			System.out.print(derivative.c);
+//			System.out.println(parser);
 			parser = derivative.visit(parser);
 //			System.out.println(parser);
 			if (parser == EmptySet.emptySet) break;

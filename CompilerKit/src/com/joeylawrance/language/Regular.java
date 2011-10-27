@@ -9,13 +9,13 @@ public class Regular {
 	public static Symbol symbol (char c) {
 		return Symbol.symbol(c);
 	}
-	public static Alternation alternation (Parser ... regexen) {
-		return Alternation.alternation(regexen);
+	public static Alternation alternation (Parser ... parsers) {
+		return Alternation.alternation(parsers);
 	}
-	public static Catenation catenation (Parser ... regexen) {
-		Parser current = regexen[0];
-		for (int i = 1; i < regexen.length; i++) {
-			current = new Catenation (current, regexen[i]);
+	public static Catenation catenation (Parser ... parsers) {
+		Parser current = parsers[0];
+		for (int i = 1; i < parsers.length; i++) {
+			current = new Catenation (current, parsers[i]);
 		}
 		return (Catenation) current;
 	}
@@ -40,9 +40,11 @@ public class Regular {
 	public static Parser upper() { return characterRange('A','Z'); }
 	public static Parser alpha() { return Alternation.alternation(lower(),upper()); }
 	public static Parser digit() { return characterRange('0','9'); }
+	public static Parser alnum() { return alternation(alpha(),digit()); }
 	public static Parser parens(Parser parser) {
 		return catenation(Symbol.symbol('('),parser,Symbol.symbol(')'));
 	}
 	public static Parser optional(Parser parser) { return new Optional(parser); }
 	public static Parser not(Parser parser) { return new Complement(parser); }
+	public static Parser intersection(Parser ...parsers) { return Intersection.intersection(parsers); }
 }

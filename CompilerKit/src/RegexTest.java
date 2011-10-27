@@ -13,7 +13,11 @@ public class RegexTest {
 		System.out.println(System.currentTimeMillis() - before); // 183ms is bad
 		r = catenation(not(symbol('\n')), string("\n"));
 		System.out.println(r);
-		System.out.println(r.recognize("abc\na"));
+		System.out.println(r.recognize("abc\n\n"));
+		r = intersection(alnum(),digit());
+		System.out.println(r);
+		System.out.println(r.recognize("a"));
+		
 	}
 
 }
