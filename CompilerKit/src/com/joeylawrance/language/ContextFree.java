@@ -82,7 +82,7 @@ public class ContextFree extends Regular {
 			// Construct new node from node parameter
 			Parser newNode;
 			if (nodes.length > 1)
-				newNode = catenation(nodes);
+				newNode = Catenation.catenation(nodes);
 			else if (nodes.length == 1)
 				newNode = nodes[0];
 			else newNode = EmptyString.emptyString;

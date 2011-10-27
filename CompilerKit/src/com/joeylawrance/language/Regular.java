@@ -13,11 +13,7 @@ public class Regular {
 		return Alternation.alternation(parsers);
 	}
 	public static Catenation catenation (Parser ... parsers) {
-		Parser current = parsers[0];
-		for (int i = 1; i < parsers.length; i++) {
-			current = new Catenation (current, parsers[i]);
-		}
-		return (Catenation) current;
+		return Catenation.catenation(parsers);
 	}
 	public static Parser string (String str) {
 		if (str.length() == 1) return Symbol.symbol(str.charAt(0));
@@ -25,7 +21,7 @@ public class Regular {
 		for (int i = 0; i < str.length(); i++) {
 			symbols[i] = Symbol.symbol(str.charAt(i));
 		}
-		return catenation(symbols);
+		return Catenation.catenation(symbols);
 	}
 	public static KleeneClosure kleeneClosure (Parser regex) {
 		return new KleeneClosure(regex);
@@ -42,9 +38,9 @@ public class Regular {
 	public static Parser digit() { return characterRange('0','9'); }
 	public static Parser alnum() { return alternation(alpha(),digit()); }
 	public static Parser parens(Parser parser) {
-		return catenation(Symbol.symbol('('),parser,Symbol.symbol(')'));
+		return Catenation.catenation(Symbol.symbol('('),parser,Symbol.symbol(')'));
 	}
 	public static Parser optional(Parser parser) { return new Optional(parser); }
 	public static Parser not(Parser parser) { return new Complement(parser); }
-	public static Parser intersection(Parser ...parsers) { return Intersection.intersection(parsers); }
+	public static Parser intersection(Parser ... parsers) { return Intersection.intersection(parsers); }
 }
