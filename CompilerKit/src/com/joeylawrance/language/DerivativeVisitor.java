@@ -4,7 +4,6 @@ class DerivativeVisitor extends RegularVisitor<Parser> {
 	// TODO: use memoization for performance improvements?
 	public char c;
 	public DerivativeVisitor() {}
-	public DerivativeVisitor(char c)             { this.c = c; }
 	public Parser visit(EmptySet emptySet)       { return emptySet; }
 	public Parser visit(EmptyString emptyString) { return EmptySet.emptySet; }
 	public Parser visit(Symbol symbol)           { return (symbol.c == c) ? EmptyString.emptyString : EmptySet.emptySet; }

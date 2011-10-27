@@ -9,6 +9,7 @@ import com.joeylawrance.visitor.ReflectiveVisitor;
  */
 public abstract class Parser {
 	public abstract ReflectiveVisitor<String> getPrinter();
+	public abstract ReflectiveVisitor<Parser> getDerivative();
 	public String toString () {
 		return getPrinter().visit(this);
 	}

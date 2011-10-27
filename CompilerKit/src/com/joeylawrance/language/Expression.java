@@ -6,4 +6,8 @@ class Expression extends Parser {
 	public ReflectiveVisitor<String> getPrinter() {
 		return new StringVisitor();
 	}
+
+	public ReflectiveVisitor<Parser> getDerivative() {
+		return new DerivativeVisitor();
+	}
 }

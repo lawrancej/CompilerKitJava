@@ -21,6 +21,7 @@ public class CFGTest {
 		s.becomes(s,parens(s));
 		s.becomes();
 		System.out.println(cfg);
+		cfg.recognize("()");
 	}
 
 }

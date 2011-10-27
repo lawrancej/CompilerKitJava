@@ -16,6 +16,11 @@ public class ContextFree extends Regular {
 		public ReflectiveVisitor<String> getPrinter() {
 			return new StringVisitor();
 		}
+
+		@Override
+		public ReflectiveVisitor<Parser> getDerivative() {
+			return new DerivativeVisitor();
+		}
 	}
 	/**
 	 * Publicly-available context-free grammar class.
@@ -27,11 +32,11 @@ public class ContextFree extends Regular {
 			this.start = start;
 		}
 	}
-	protected static abstract class Visitor<T> extends com.joeylawrance.language.RegularVisitor<T> {
+	protected static abstract class ContextFreeVisitor<T> extends RegularVisitor<T> {
 		public abstract T visit(Nonterminal nonterminal);
 		public abstract T visit(CFG cfg);		
 	}
-	static class NonterminalListBuilder extends Visitor<Void> {
+	static class NonterminalListBuilder extends ContextFreeVisitor<Void> {
 		CFG grammar;
 		public Void visit(EmptySet emptySet) { return null; }
 		public Void visit(EmptyString emptyString) { return null; }
@@ -70,7 +75,8 @@ public class ContextFree extends Regular {
 		}
 		@Override
 		public Void visit(Intersection intersection) {
-			// TODO Auto-generated method stub
+			visit(intersection.left);
+			visit(intersection.right);
 			return null;
 		}
 	}
@@ -95,12 +101,11 @@ public class ContextFree extends Regular {
 				node = Alternation.alternation(node,newNode);
 			}
 		}
-		public <T> T accept(Visitor<T> v) { return v.visit(this); }
 	}
 	public static Nonterminal nonterminal (String name) {
 		return new Nonterminal(name);
 	}
-	static class FixedPointVisitor extends Visitor<Parser> {
+	static class FixedPointVisitor extends ContextFreeVisitor<Parser> {
 		public Parser visit(EmptySet emptySet) { return emptySet; }
 		public Parser visit(EmptyString emptyString) { return emptyString; }  // Should really be the set containing the empty string
 		public Parser visit(Symbol symbol) { return EmptySet.emptySet; }

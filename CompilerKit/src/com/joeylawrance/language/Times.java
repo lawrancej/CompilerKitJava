@@ -24,9 +24,4 @@ class Times extends EquivalentExpression {
 		this.equivalent = Catenation.catenation(parsers);
 		this.node = node;
 	}
-	public static void main(String[] args) {
-		Times times = new Times(Symbol.symbol('B'),5);
-		DerivativeVisitor derivative = new DerivativeVisitor('B');
-		System.out.println(derivative.visit(times));
-	}
 }
