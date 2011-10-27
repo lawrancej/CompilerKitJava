@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 import com.joeylawrance.visitor.IndexedVisitable;
 import com.joeylawrance.visitor.IndexedVisitor;
+import com.joeylawrance.visitor.IndexedVisitor2;
 import com.joeylawrance.visitor.LookupVisitor;
 import com.joeylawrance.visitor.ReflectiveVisitor;
 import com.joeylawrance.visitor.Visitable;
@@ -65,10 +66,9 @@ public class LookupVisitorTest {
 			});
 		}
 	}
-	static class IndexedPrintVisitor extends IndexedVisitor<Void> {
+	static class IndexedPrintVisitor extends IndexedVisitor2<Void> {
 		IndexedPrintVisitor() {
-			super(2);
-			this.register(0,new Visitor<Component,Void>() {
+			this.register(new Visitor<Component,Void>() {
 				@Override
 				public Void visit(Component node) {
 					for (IndexedVisitable v : node.nodes) {
@@ -77,7 +77,7 @@ public class LookupVisitorTest {
 					return null;
 				}
 			});
-			this.register(1, new Visitor<Leaf,Void>() {
+			this.register(new Visitor<Leaf,Void>() {
 				@Override
 				public Void visit(Leaf node) {
 //					System.out.print(node.str);
