@@ -1,16 +1,15 @@
 package com.joeylawrance.visitor;
 
 /**
- * IndexedVisitor<S,T>
+ * IndexedVisitor<T>
  * 
- * S is the Visitable type root
  * T is the visitor return type
  * 
  * Example usage:
  * 
- * public StringVisitor extends LookupVisitor<Parser,String> {
+ * public StringVisitor extends IndexedVisitor<String> {
  * 		StringVisitor () {
- * 			register(EmptySet.class, new Visitor<EmptySet,String>() {
+ * 			register(EMPTYSET, new Visitor<EmptySet,String>() {
  * 				...
  * 			});
  * 		}
