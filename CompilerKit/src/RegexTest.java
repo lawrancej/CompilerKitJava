@@ -16,7 +16,7 @@ public class RegexTest {
 		System.out.println(r.recognize("abc\n\n"));
 		r = intersection(alnum(),digit());
 		System.out.println(r);
-		System.out.println(r.recognize("a"));
+		System.out.println(r.recognize("9"));
 		
 	}
 

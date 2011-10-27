@@ -61,6 +61,7 @@ class DerivativeVisitor extends RegularVisitor<Parser> {
 	public Parser visit(Intersection intersection) {
 		Parser left = visit(intersection.left);
 		Parser right = visit(intersection.right);
+		if (left == right) return right;
 		return new Intersection(left, right);
 	}
 }
