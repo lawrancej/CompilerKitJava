@@ -1,6 +1,7 @@
 import static com.joeylawrance.language.ContextFree.*;
 
 
+// TODO: make this an honest to goodness jUnit test suite try for 100% branch coverage
 public class CFGTest {
 	public static void main(String[] args) {
 		Nonterminal value = nonterminal("value");
@@ -21,7 +22,7 @@ public class CFGTest {
 		s.becomes(s,parens(s));
 		s.becomes();
 		System.out.println(cfg);
-		cfg.recognize("()");
+//		cfg.recognize("()"); should return true
 	}
 
 }

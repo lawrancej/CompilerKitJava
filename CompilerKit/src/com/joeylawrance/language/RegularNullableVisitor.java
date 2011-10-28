@@ -1,7 +1,7 @@
 package com.joeylawrance.language;
 
-class NullableVisitor extends RegularVisitor<Parser> {
-	static final NullableVisitor nullable = new NullableVisitor();
+class RegularNullableVisitor extends RegularVisitor<Parser> {
+	static RegularNullableVisitor nullable = new RegularNullableVisitor();
 	public Parser visit(EmptySet emptySet)       { return emptySet; }
 	public Parser visit(EmptyString emptyString) { return emptyString; }
 	public Parser visit(Symbol symbol)           { return EmptySet.emptySet; }

@@ -1,6 +1,7 @@
 import static com.joeylawrance.language.Regular.*;
 import com.joeylawrance.language.Parser;
 
+//TODO: make this an honest to goodness jUnit test suite try for 100% branch coverage
 public class RegexTest {
 
 	public static void main(String[] args) {

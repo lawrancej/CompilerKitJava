@@ -1,13 +1,13 @@
 import java.util.ArrayList;
 
 import com.joeylawrance.visitor.IndexedVisitable;
-import com.joeylawrance.visitor.IndexedVisitor;
 import com.joeylawrance.visitor.IndexedVisitor2;
 import com.joeylawrance.visitor.LookupVisitor;
 import com.joeylawrance.visitor.ReflectiveVisitor;
 import com.joeylawrance.visitor.Visitable;
 import com.joeylawrance.visitor.Visitor;
 
+//TODO: make this an honest to goodness jUnit test suite try for 100% branch coverage
 public class LookupVisitorTest {
 	public static class SlowPrintVisitor extends ReflectiveVisitor<Void> {
 		public Void visit(Component node) {

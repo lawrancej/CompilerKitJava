@@ -1,8 +1,12 @@
 package com.joeylawrance.language;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 import com.joeylawrance.visitor.ReflectiveVisitor;
+import com.joeylawrance.visitor.Visitor;
 
 /**
  * Matches Context-free grammars using derivatives.
@@ -18,8 +22,11 @@ public class ContextFree extends Regular {
 		}
 
 		@Override
-		public ReflectiveVisitor<Parser> getDerivative() {
-			return new DerivativeVisitor();
+		public DerivativeVisitor<Object, Parser> getDerivative() {
+			return new ContextFreeDerivativeVisitor();
+		}
+		public Visitor<Object,Parser> getNullable() {
+			return ContextFreeNullableVisitor.nullable;
 		}
 	}
 	/**
@@ -92,7 +99,7 @@ public class ContextFree extends Regular {
 			else if (nodes.length == 1)
 				newNode = nodes[0];
 			else newNode = EmptyString.emptyString;
-			
+
 			// If the nonterminal doesn't have a node, it's newNode
 			// Otherwise, its the existing node or newNode
 			if (node == null) {
@@ -115,44 +122,68 @@ public class ContextFree extends Regular {
 			// return alternation.right.accept(this);
 		}
 		public Parser visit(Catenation catenation) {
-			// TODO Auto-generated method stub
 			return null;
-			
+
 		}
 		public Parser visit(KleeneClosure kleeneClosure) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 		public Parser visit(Nonterminal nonterminal) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 		public Parser visit(CFG cfg) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 		@Override
 		public Parser visit(Complement not) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 		@Override
 		public Parser visit(Intersection intersection) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 	}
-	static class DerivativeVisitor extends com.joeylawrance.language.DerivativeVisitor {
+	static class ContextFreeDerivativeVisitor extends RegularDerivativeVisitor {
 		//FIXME
 		public Parser visit(Nonterminal nonterminal) {
-			Nonterminal result = new Nonterminal (nonterminal.name);
-			result.becomes(visit(nonterminal));
-			return result; 
+/*			if (map.containsKey(this.getSymbol()) && map.get(this.getSymbol()).nonterminals.contains(nonterminal))
+				return nonterminal;
+			else {
+				HashSet<Nonterminal> nonterminals;
+				Nonterminal result = new Nonterminal (nonterminal.name);
+				nonterminals = map.get(this.getSymbol());
+				if (nonterminals == null) {
+					nonterminals = new HashSet<Nonterminal>();
+					map.put((Character)this.getSymbol(), nonterminals);
+				}
+				if (!nonterminals.contains(nonterminal)) {
+					nonterminals.add(result);
+					result.becomes(new Alternation(nonterminal,visit(nonterminal)));
+					return result;
+				} else {
+					return nonterminal;
+				}
+			}*/
+			return visit(nonterminal.node);
 		}
 		public Parser visit(CFG cfg) {
 			return visit(cfg.start);
 		}
-//		public HashMap<Pair<Character,Nonterminal>,Nonterminal> map = new HashMap<Pair<Character,Nonterminal>,Nonterminal>();
+		public Map<Character,CFG> map = new HashMap<Character,CFG>();
+	}
+	static class ContextFreeNullableVisitor extends RegularNullableVisitor {
+		static ContextFreeNullableVisitor nullable = new ContextFreeNullableVisitor();
+		public Parser visit(Nonterminal nonterminal) {
+			return visit(nonterminal.node);
+		}
+		public Parser visit(CFG cfg) {
+			return visit(cfg.start);
+		}
+	}
+	static class Pair<S,T> {
+		S left; T right;
+		public Pair(S left, T right) { this.left = left; this.right = right; }
+		public int hashCode() { return left.hashCode()+right.hashCode(); }
 	}
 	static class CompactionVisitor extends com.joeylawrance.language.CompactionVisitor {
 		public Parser visit(Nonterminal nonterminal) { // FIXME: doesn't handle S->S|lambda
