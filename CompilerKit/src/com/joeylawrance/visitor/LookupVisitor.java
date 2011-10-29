@@ -25,7 +25,7 @@ public class LookupVisitor<S,T> implements Visitor<S,T> {
 	}
 	@SuppressWarnings("unchecked")
 	@Override
-	public T visit(S node) {
+	public <U extends T> U visit(S node) {
 		return ((Visitor<S,T>)map.get(node.getClass())).visit(node);
 	}
 }

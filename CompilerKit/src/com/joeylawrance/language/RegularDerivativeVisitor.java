@@ -1,9 +1,12 @@
 package com.joeylawrance.language;
 
+import com.joeylawrance.visitor.Visitor;
+
 class RegularDerivativeVisitor extends RegularVisitor<Parser> implements DerivativeVisitor<Object,Parser> {
 	// TODO: use memoization for performance improvements?
 	public char c;
-	public RegularDerivativeVisitor() {}
+	Visitor<Object,Parser> nullable;
+	public RegularDerivativeVisitor(Visitor<Object,Parser> nullable) {this.nullable = nullable;}
 	public Parser visit(EmptySet emptySet)       { return emptySet; }
 	public Parser visit(EmptyString emptyString) { return EmptySet.emptySet; }
 	public Parser visit(Symbol symbol)           { return (symbol.c == c) ? EmptyString.emptyString : EmptySet.emptySet; }
@@ -18,7 +21,7 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 	public Parser visit(Catenation catenation) {
 		Parser left = visit(catenation.left);
 		Parser right = visit(catenation.right);
-		Parser nulled = catenation.getNullable().visit(catenation.left);
+		Parser nulled = this.getNullable().visit(catenation.left);
 		Parser alternationLeft;
 		Parser alternationRight;
 		
@@ -43,7 +46,7 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 //				new Catenation (visit(catenation.left), catenation.right),
 //				new Catenation (NullableVisitor.nullable.visit(catenation.left),visit(catenation.right)));
 	}
-	public Parser visit(Complement not) {
+	public Complement visit(Complement not) {
 //		Parser notNode = visit(not.node);
 //		if (notNode == EmptyString)
 		return new Complement(visit(not.node));
@@ -72,5 +75,9 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 	public void setSymbol(char c) {
 		// TODO Auto-generated method stub
 		this.c = c;
+	}
+	@Override
+	public Visitor<Object, Parser> getNullable() {
+		return nullable;
 	}
 }

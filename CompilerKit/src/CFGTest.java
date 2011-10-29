@@ -21,8 +21,8 @@ public class CFGTest {
 		CFG cfg = new CFG(s);
 		s.becomes(s,parens(s));
 		s.becomes();
-		System.out.println(cfg);
-//		cfg.recognize("()"); should return true
+//		System.out.println(cfg.);
+		System.out.println(cfg.recognize("()")); // should return true
 	}
 
 }

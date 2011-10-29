@@ -1,7 +1,6 @@
 package com.joeylawrance.language;
 
 import com.joeylawrance.visitor.ReflectiveVisitor;
-import com.joeylawrance.visitor.Visitor;
 
 // TODO: Allow recognize to work on abitrary streams? make generic? this would also affect derivative visitor
 /**
@@ -11,7 +10,6 @@ import com.joeylawrance.visitor.Visitor;
 public abstract class Parser {
 	public abstract ReflectiveVisitor<String> getPrinter();
 	public abstract DerivativeVisitor<Object,Parser> getDerivative();
-	public abstract Visitor<Object,Parser> getNullable();
 
 	public String toString () {
 		return getPrinter().visit(this);
@@ -21,12 +19,12 @@ public abstract class Parser {
 		DerivativeVisitor<Object,Parser> derivative = getDerivative();
 		for (int i = 0; i < str.length(); i++) {
 			derivative.setSymbol(str.charAt(i));
-//			System.out.print(derivative.c);
-//			System.out.println(parser);
+			System.out.print(this.getDerivative().getSymbol());
+			System.out.println(parser);
 			parser = derivative.visit(parser);
-//			System.out.println(parser);
+			System.out.println(parser);
 			if (parser == EmptySet.emptySet) break;
 		}
-		return this.getNullable().visit(parser) == EmptyString.emptyString;
+		return getDerivative().getNullable().visit(parser) == EmptyString.emptyString;
 	}
 }

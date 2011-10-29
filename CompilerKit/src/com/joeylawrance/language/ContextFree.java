@@ -3,7 +3,6 @@ package com.joeylawrance.language;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 
 import com.joeylawrance.visitor.ReflectiveVisitor;
 import com.joeylawrance.visitor.Visitor;
@@ -20,13 +19,9 @@ public class ContextFree extends Regular {
 		public ReflectiveVisitor<String> getPrinter() {
 			return new StringVisitor();
 		}
-
 		@Override
 		public DerivativeVisitor<Object, Parser> getDerivative() {
-			return new ContextFreeDerivativeVisitor();
-		}
-		public Visitor<Object,Parser> getNullable() {
-			return ContextFreeNullableVisitor.nullable;
+			return new ContextFreeDerivativeVisitor(ContextFreeNullableVisitor.nullable);
 		}
 	}
 	/**
@@ -144,8 +139,11 @@ public class ContextFree extends Regular {
 		}
 	}
 	static class ContextFreeDerivativeVisitor extends RegularDerivativeVisitor {
+		public ContextFreeDerivativeVisitor(Visitor<Object, Parser> nullable) {
+			super(nullable);
+		}
 		//FIXME
-		public Parser visit(Nonterminal nonterminal) {
+		public Nonterminal visit(Nonterminal nonterminal) {
 /*			if (map.containsKey(this.getSymbol()) && map.get(this.getSymbol()).nonterminals.contains(nonterminal))
 				return nonterminal;
 			else {
@@ -164,17 +162,28 @@ public class ContextFree extends Regular {
 					return nonterminal;
 				}
 			}*/
-			return visit(nonterminal.node);
+			if (set.contains(nonterminal)) return nonterminal;
+			else {
+				Nonterminal result = new Nonterminal(nonterminal.name);
+				set.add(nonterminal);
+				result.becomes(new Alternation(nonterminal,visit(nonterminal.node)));
+				return result;
+			}
 		}
 		public Parser visit(CFG cfg) {
-			return visit(cfg.start);
+			CFG result = new CFG(visit(cfg.start));
+			return result;
 		}
-		public Map<Character,CFG> map = new HashMap<Character,CFG>();
+		public HashSet<Nonterminal> set = new HashSet<Nonterminal>();
 	}
 	static class ContextFreeNullableVisitor extends RegularNullableVisitor {
 		static ContextFreeNullableVisitor nullable = new ContextFreeNullableVisitor();
+		public HashMap<Nonterminal,Parser> map = new HashMap<Nonterminal, Parser>();
 		public Parser visit(Nonterminal nonterminal) {
-			return visit(nonterminal.node);
+			if (!map.containsKey(nonterminal)) {
+				map.put(nonterminal, visit(nonterminal.node));
+			}
+			return map.get(nonterminal);
 		}
 		public Parser visit(CFG cfg) {
 			return visit(cfg.start);
