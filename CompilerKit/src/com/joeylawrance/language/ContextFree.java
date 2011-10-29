@@ -164,9 +164,10 @@ public class ContextFree extends Regular {
 			}*/
 			if (set.contains(nonterminal)) return nonterminal;
 			else {
-				Nonterminal result = new Nonterminal(nonterminal.name);
+				Nonterminal result = new Nonterminal(nonterminal.name + "'");
 				set.add(nonterminal);
-				result.becomes(new Alternation(nonterminal,visit(nonterminal.node)));
+				result.becomes(nonterminal);
+				result.becomes(visit(nonterminal.node));
 				return result;
 			}
 		}

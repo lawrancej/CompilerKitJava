@@ -15,6 +15,7 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 		Parser right = visit(alternation.right);
 		if (left == EmptySet.emptySet) return right;
 		else if (right == EmptySet.emptySet) return left;
+		else if (left == right) return left;
 		else return new Alternation(left, right);
 		// return new Alternation(visit(alternation.left), visit(alternation.right));
 	}
