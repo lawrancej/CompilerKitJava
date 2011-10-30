@@ -17,6 +17,12 @@ public class CFGTest {
 		expr.becomes(sum);
 		System.out.println(formula);
 
+		Nonterminal list = nonterminal("List");
+		CFG listCFG = new CFG(list);
+		list.becomes(catenation(list,symbol('x')));
+		list.becomes(symbol('x'));
+		System.out.println(listCFG);
+		System.out.println(listCFG.recognize("x"));
 		Nonterminal s = nonterminal("S");
 		CFG cfg = new CFG(s);
 		s.becomes(s,parens(s));
