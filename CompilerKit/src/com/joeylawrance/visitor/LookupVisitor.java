@@ -12,7 +12,7 @@ import java.util.HashMap;
  * 
  * public StringVisitor extends LookupVisitor<Parser,String> {
  * 		StringVisitor () {
- * 			register(EmptySet.class, new Visitor<EmptySet,String>() {
+ * 			register(EmptySet.class, new ChildVisitor<Parser,EmptySet,String>() {
  * 				...
  * 			});
  * 		}
