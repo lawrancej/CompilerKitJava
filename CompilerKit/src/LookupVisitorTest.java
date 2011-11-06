@@ -6,6 +6,7 @@ import com.joeylawrance.visitor.LookupVisitor;
 import com.joeylawrance.visitor.ReflectiveVisitor;
 import com.joeylawrance.visitor.Visitable;
 import com.joeylawrance.visitor.Visitor;
+import com.joeylawrance.visitor.ChildVisitor;
 
 //TODO: make this an honest to goodness jUnit test suite try for 100% branch coverage
 public class LookupVisitorTest {
@@ -48,19 +49,28 @@ public class LookupVisitorTest {
 	}
 	static class PrintVisitor extends LookupVisitor<Visitable,Void> {
 		PrintVisitor() {
-			this.register(Component.class, new Visitor<Component,Void>() {
+			this.register(Component.class, new ChildVisitor<Visitable,Component,Void>() {
 				@Override
 				public Void visit(Component node) {
 					for (IndexedVisitable v : node.nodes) {
-						PrintVisitor.this.visit(v);
+						getParent().visit(v);
 					}
 					return null;
 				}
+
+				@Override
+				public Visitor<Visitable, Void> getParent() {
+					return PrintVisitor.this;
+				}
 			});
-			this.register(Leaf.class, new Visitor<Leaf,Void>() {
+			this.register(Leaf.class, new ChildVisitor<Visitable,Leaf,Void>() {
 				@Override
 				public Void visit(Leaf node) {
-//					System.out.print(node.str);
+					return null;
+				}
+
+				@Override
+				public Visitor<Visitable, Void> getParent() {
 					return null;
 				}
 			});

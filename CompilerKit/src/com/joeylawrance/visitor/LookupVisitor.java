@@ -19,8 +19,8 @@ import java.util.HashMap;
  * }
  */
 public class LookupVisitor<S,T> implements Visitor<S,T> {
-	private HashMap <Class<? extends S>, Visitor<? extends S,T>> map = new HashMap <Class<? extends S>, Visitor<? extends S,T>>();
-	public void register(Class<? extends S> klass, Visitor<? extends S,T> visitor) {
+	private HashMap <Class<? extends S>, ChildVisitor<S,? extends S,T>> map = new HashMap <Class<? extends S>, ChildVisitor<S,? extends S,T>>();
+	public void register(Class<? extends S> klass, ChildVisitor<S,? extends S,T> visitor) {
 		map.put(klass,visitor);
 	}
 	@SuppressWarnings("unchecked")
