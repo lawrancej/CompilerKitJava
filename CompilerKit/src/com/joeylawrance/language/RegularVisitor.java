@@ -23,9 +23,9 @@ abstract class RegularVisitor<T> extends ReflectiveVisitor<T> {
 	
 	// Regular expression extensions.
 	// By default, use the equivalent expressions defined in terms of the primitives above
-	public T visit(PositiveClosure positiveClosure) { return visit(positiveClosure.equivalent); }
-	public T visit(Times times) { return visit(times.equivalent); }
-	public T visit(CharacterRange characterRange) { return visit(characterRange.equivalent); }
-	public T visit(Optional optional) { return visit(optional.equivalent); }
+	public T visit(PositiveClosure positiveClosure) { return visit(positiveClosure.getEquivalent()); }
+	public T visit(Times times) { return visit(times.getEquivalent()); }
+	public T visit(CharacterRange characterRange) { return visit(characterRange.getEquivalent()); }
+	public T visit(Optional optional) { return visit(optional.getEquivalent()); }
 	public T visit(Difference difference) { return visit(difference.equivalent); }
 }

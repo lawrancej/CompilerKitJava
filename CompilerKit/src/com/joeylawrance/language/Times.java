@@ -21,7 +21,7 @@ class Times extends EquivalentExpression {
 			parsers[i] = node;
 		for ( ; i < this.hi; i++)
 			parsers[i] = new Optional(node);
-		this.equivalent = Catenation.catenation(parsers);
+		this.setEquivalent(Catenation.catenation(parsers));
 		this.node = node;
 	}
 }

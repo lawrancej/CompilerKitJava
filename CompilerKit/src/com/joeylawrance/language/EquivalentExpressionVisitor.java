@@ -6,7 +6,7 @@ public abstract class EquivalentExpressionVisitor<T> implements ChildVisitor<Par
 
 	@Override
 	public T visit(EquivalentExpression node) {
-		return getParent().visit(node.equivalent);
+		return getParent().visit(node.getEquivalent());
 	}
 	
 }
