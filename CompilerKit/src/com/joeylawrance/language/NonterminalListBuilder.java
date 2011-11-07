@@ -2,7 +2,7 @@ package com.joeylawrance.language;
 
 import java.util.ArrayList;
 
-
+// FIXME: TODO: this is preventing CFGTest from working
 class NonterminalListBuilder extends ContextFreeVisitor<Void> {
 	CFG grammar;
 	public Void visit(EmptySet emptySet) { return null; }

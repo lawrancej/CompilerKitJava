@@ -7,6 +7,7 @@ class RegularNullableVisitor extends RegularVisitor<Parser> {
 	private static RegularNullableVisitor nullable = new RegularNullableVisitor();
 	public static RegularNullableVisitor getInstance() { return nullable; }
 	RegularNullableVisitor() {
+		super();
 		this.register(EmptySet.class, new IdentityVisitor<Parser,EmptySet>());
 		this.register(EmptyString.class, new IdentityVisitor<Parser,EmptyString>());
 		this.register(Symbol.class, new DefaultVisitorEntry<Parser,Symbol,Parser>() {

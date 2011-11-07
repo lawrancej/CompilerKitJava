@@ -2,13 +2,13 @@ package com.joeylawrance.visitor;
 
 import java.util.HashMap;
 
+// TODO: it'd be nice to be able to register multiple classes for the same child visitor
+
 /**
- * LookupVisitor<S,T>
+ * LookupVisitor<BaseNodeType,ReturnType>
  * 
- * S is the Visitable type root
- * T is the visitor return type
- * TODO: change parameter type names to readable things, not just single letters
- * TODO: it'd be nice to be able to register multiple classes for the same child visitor
+ * BaseNodeType is the is Visitable node type
+ * ReturnType is what the visit method returns
  * 
  * Example usage:
  * 
@@ -32,7 +32,3 @@ public class VisitorMap<BaseNodeType,ReturnType> implements Visitor<BaseNodeType
 		return ((Visitor<BaseNodeType,ReturnType>)map.get(node.getClass())).visit(node);
 	}
 }
-
-//Visitor provides a visit method
-// Lookup Visitor also provides a visit method
-// Things being visited do not have visit methods
