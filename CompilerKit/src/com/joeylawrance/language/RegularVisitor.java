@@ -1,5 +1,6 @@
 package com.joeylawrance.language;
 
+import com.joeylawrance.visitor.DefaultVisitorEntry;
 import com.joeylawrance.visitor.VisitorMap;
 
 /**
@@ -13,6 +14,23 @@ import com.joeylawrance.visitor.VisitorMap;
  */
 
 abstract class RegularVisitor<T> extends VisitorMap<Parser,T> {
+	RegularVisitor() {
+		this.register(PositiveClosure.class, new DefaultVisitorEntry<Parser,PositiveClosure,T>() {
+			public T visit(PositiveClosure positiveClosure) { return getParent().visit(positiveClosure.getEquivalent()); }			
+		});
+		this.register(Times.class, new DefaultVisitorEntry<Parser,Times,T>() {
+			public T visit(Times times) { return getParent().visit(times.getEquivalent()); }			
+		});
+		this.register(CharacterRange.class, new DefaultVisitorEntry<Parser,CharacterRange,T>() {
+			public T visit(CharacterRange characterRange) { return getParent().visit(characterRange.getEquivalent()); }			
+		});
+		this.register(Optional.class, new DefaultVisitorEntry<Parser,Optional,T>() {
+			public T visit(Optional optional) { return getParent().visit(optional.getEquivalent()); }			
+		});
+		this.register(Difference.class, new DefaultVisitorEntry<Parser,Difference,T>() {
+			public T visit(Difference difference) { return getParent().visit(difference.getEquivalent()); }			
+		});
+	}
 	// Primitive regular expressions
 	public abstract T visit(EmptySet emptySet);
 	public abstract T visit(EmptyString emptyString);

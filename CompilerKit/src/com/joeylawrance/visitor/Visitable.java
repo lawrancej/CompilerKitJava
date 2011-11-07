@@ -1,5 +1,8 @@
 package com.joeylawrance.visitor;
 
-public interface Visitable {
-
-}
+/**
+ * Tagging interface for Visitable classes.
+ * 
+ * It is unnecessary to use this interface, but it is supplied for convenience.
+ */
+public interface Visitable {}

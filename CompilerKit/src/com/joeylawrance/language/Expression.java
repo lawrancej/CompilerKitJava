@@ -9,6 +9,6 @@ class Expression extends Parser {
 	}
 
 	public DerivativeVisitor<Parser, Parser> getDerivative() {
-		return new RegularDerivativeVisitor(RegularNullableVisitor.nullable);
+		return new RegularDerivativeVisitor(RegularNullableVisitor.getInstance());
 	}
 }

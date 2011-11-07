@@ -20,16 +20,16 @@ import java.util.HashMap;
  * 		}
  * }
  */
-public class VisitorMap<S,T> implements Visitor<S,T> {
-	private HashMap <Class<? extends S>, VisitorEntry<S,? extends S,T>> map = new HashMap <Class<? extends S>, VisitorEntry<S,? extends S,T>>();
-	public <R extends S> void register(Class<R> klass, VisitorEntry<S,R,T> visitor) {
+public class VisitorMap<BaseNodeType,ReturnType> implements Visitor<BaseNodeType,ReturnType> {
+	private HashMap <Class<? extends BaseNodeType>, VisitorEntry<BaseNodeType,? extends BaseNodeType,ReturnType>> map = new HashMap <Class<? extends BaseNodeType>, VisitorEntry<BaseNodeType,? extends BaseNodeType,ReturnType>>();
+	public <NodeType extends BaseNodeType> void register(Class<NodeType> klass, VisitorEntry<BaseNodeType,NodeType,ReturnType> visitor) {
 		visitor.setParent(this);
 		map.put(klass,visitor);
 	}
 	@SuppressWarnings("unchecked")
 	@Override
-	public T visit(S node) {
-		return ((Visitor<S,T>)map.get(node.getClass())).visit(node);
+	public ReturnType visit(BaseNodeType node) {
+		return ((Visitor<BaseNodeType,ReturnType>)map.get(node.getClass())).visit(node);
 	}
 }
 

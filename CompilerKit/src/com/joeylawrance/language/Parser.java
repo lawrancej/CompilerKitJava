@@ -19,10 +19,10 @@ public abstract class Parser {
 		DerivativeVisitor<Parser,Parser> derivative = getDerivative();
 		for (int i = 0; i < str.length(); i++) {
 			derivative.setSymbol(str.charAt(i));
-			System.out.print("Symbol:" + derivative.getSymbol());
-			System.out.println("before: " + parser);
+//			System.out.print("Symbol:" + derivative.getSymbol());
+//			System.out.println("before: " + parser);
 			parser = derivative.visit(parser);
-			System.out.println("after: " + parser);
+//			System.out.println("after: " + parser);
 			if (parser == EmptySet.emptySet) break;
 		}
 		return derivative.getNullable().visit(parser) == EmptyString.emptyString;

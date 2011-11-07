@@ -1,6 +1,6 @@
 package com.joeylawrance.visitor;
 
-public interface VisitorEntry<R,S,T> extends Visitor<S, T> { // R is the base node type, S is the node type, T is the return type
-	public Visitor<R,T> getParent();
-	public void setParent(Visitor<R,T> parent);
+public interface VisitorEntry<BaseNodeType,NodeType,ReturnType> extends Visitor<NodeType, ReturnType> {
+	public Visitor<BaseNodeType,ReturnType> getParent();
+	public void setParent(Visitor<BaseNodeType,ReturnType> parent);
 }

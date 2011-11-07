@@ -11,6 +11,6 @@ class Grammar extends Parser {
 	}
 	@Override
 	public DerivativeVisitor<Parser, Parser> getDerivative() {
-		return new ContextFreeDerivativeVisitor(ContextFreeNullableVisitor.nullable);
+		return new ContextFreeDerivativeVisitor(ContextFreeNullableVisitor.getInstance());
 	}
 }

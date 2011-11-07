@@ -6,4 +6,7 @@ class Difference extends BinaryOperator {
 		super(left, right);
 		equivalent = new Intersection(left,new Complement(right));
 	}
+	public Parser getEquivalent() {
+		return equivalent;
+	}
 }
