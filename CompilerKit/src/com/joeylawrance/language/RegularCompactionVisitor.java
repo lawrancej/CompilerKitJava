@@ -1,7 +1,7 @@
 package com.joeylawrance.language;
 
-class CompactionVisitor extends RegularVisitor<Parser> {
-	static final CompactionVisitor compactor = new CompactionVisitor();
+class RegularCompactionVisitor extends RegularVisitor<Parser> {
+	static final RegularCompactionVisitor compactor = new RegularCompactionVisitor();
 	public Parser visit(EmptySet emptySet)       { return emptySet; }
 	public Parser visit(EmptyString emptyString) { return emptyString; }
 	public Parser visit(Symbol symbol)           { return symbol; }

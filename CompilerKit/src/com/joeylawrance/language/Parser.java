@@ -1,6 +1,5 @@
 package com.joeylawrance.language;
 
-import com.joeylawrance.visitor.ReflectiveVisitor;
 import com.joeylawrance.visitor.Visitor;
 
 // TODO: Allow recognize to work on abitrary streams? make generic? this would also affect derivative visitor

@@ -1,10 +1,7 @@
 package com.joeylawrance.language;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
-import com.joeylawrance.visitor.ReflectiveVisitor;
 import com.joeylawrance.visitor.Visitor;
 
 /**
@@ -14,96 +11,7 @@ import com.joeylawrance.visitor.Visitor;
  * 2. "Derivative Parsing", by Daniel Spiewak
  */
 public class ContextFree extends Regular {
-	// FIXME: nonterminals
-	static class Grammar extends Parser {
-		public Visitor<Parser,String> getPrinter() {
-			return new StringVisitor();
-		}
-		@Override
-		public DerivativeVisitor<Parser, Parser> getDerivative() {
-			return new ContextFreeDerivativeVisitor(ContextFreeNullableVisitor.nullable);
-		}
-	}
-	/**
-	 * Publicly-available context-free grammar class.
-	 */
-	public static class CFG extends Grammar {
-		private Nonterminal start;
-		private ArrayList <Nonterminal> nonterminals;
-		public CFG(Nonterminal start) {
-			this.start = start;
-		}
-	}
-	protected static abstract class ContextFreeVisitor<T> extends RegularVisitor<T> {
-		public abstract T visit(Nonterminal nonterminal);
-		public abstract T visit(CFG cfg);		
-	}
-	static class NonterminalListBuilder extends ContextFreeVisitor<Void> {
-		CFG grammar;
-		public Void visit(EmptySet emptySet) { return null; }
-		public Void visit(EmptyString emptyString) { return null; }
-		public Void visit(Symbol symbol) { return null; }
-		public Void visit(Alternation alternation) {
-			visit(alternation.left);
-			visit(alternation.right);
-			return null;
-		}
-		public Void visit(Catenation catenation) {
-			visit(catenation.left);
-			visit(catenation.right);
-			return null;
-		}
-		public Void visit(KleeneClosure kleeneClosure) {
-			visit(kleeneClosure.node);
-			return null;
-		}
-		public Void visit(Complement not) {
-			visit(not.node);
-			return null;
-		}
-		public Void visit(Nonterminal nonterminal) {
-			// Halt on a rule like: S -> S
-			if (!grammar.nonterminals.contains(nonterminal)) {
-				grammar.nonterminals.add(nonterminal);
-				visit(nonterminal.node);
-			}
-			return null;
-		}
-		public Void visit(CFG cfg) {
-			grammar = cfg;
-			grammar.nonterminals = new ArrayList<Nonterminal>();
-			visit(cfg.start);
-			return null;
-		}
-		@Override
-		public Void visit(Intersection intersection) {
-			visit(intersection.left);
-			visit(intersection.right);
-			return null;
-		}
-	}
-	private static final NonterminalListBuilder builder = new NonterminalListBuilder();
-	public static class Nonterminal extends Grammar {
-		Parser node; String name;
-		public Nonterminal (String name) { this.name = name; }
-		public void becomes (Parser ...nodes) {
-			// Construct new node from node parameter
-			Parser newNode;
-			if (nodes.length > 1)
-				newNode = Catenation.catenation(nodes);
-			else if (nodes.length == 1)
-				newNode = nodes[0];
-			else newNode = EmptyString.emptyString;
-
-			// If the nonterminal doesn't have a node, it's newNode
-			// Otherwise, its the existing node or newNode
-			if (node == null) {
-				node = newNode;
-			} else {
-				node = Alternation.alternation(node,newNode);
-			}
-		}
-	}
+	static final NonterminalListBuilder builder = new NonterminalListBuilder();
 	public static Nonterminal nonterminal (String name) {
 		return new Nonterminal(name);
 	}
@@ -176,52 +84,5 @@ public class ContextFree extends Regular {
 			return result;
 		}
 		public HashSet<Nonterminal> set = new HashSet<Nonterminal>();
-	}
-	static class ContextFreeNullableVisitor extends RegularNullableVisitor {
-		static ContextFreeNullableVisitor nullable = new ContextFreeNullableVisitor();
-		public HashMap<Nonterminal,Parser> map = new HashMap<Nonterminal, Parser>();
-		public Parser visit(Nonterminal nonterminal) {
-			if (!map.containsKey(nonterminal)) {
-				map.put(nonterminal, visit(nonterminal.node)); // this is where we run into trouble: it's visiting before we can put it in the map. to fix it, we will make an anonymous visitor!
-			}
-			return map.get(nonterminal);
-		}
-		public Parser visit(CFG cfg) {
-			return visit(cfg.start);
-		}
-	}
-	static class Pair<S,T> {
-		S left; T right;
-		public Pair(S left, T right) { this.left = left; this.right = right; }
-		public int hashCode() { return left.hashCode()+right.hashCode(); }
-	}
-	static class CompactionVisitor extends com.joeylawrance.language.CompactionVisitor {
-		public Parser visit(Nonterminal nonterminal) { // FIXME: doesn't handle S->S|lambda
-			Parser p = visit(nonterminal.node);
-			if (p == EmptySet.emptySet) return EmptySet.emptySet;
-			Nonterminal result = new Nonterminal(nonterminal.name);
-			result.becomes(p);
-			return result;
-		}
-		public Parser visit(CFG cfg) {
-			Parser start = visit(cfg.start);
-			if (start == EmptySet.emptySet) return EmptySet.emptySet;
-			return new CFG((Nonterminal)start);
-		}		
-	}
-	static class StringVisitor extends com.joeylawrance.language.StringVisitor {
-		public String visit(Nonterminal nonterminal) {
-			return nonterminal.name;
-		}
-		public String visit(CFG cfg) {
-			builder.visit(cfg);
-			StringBuilder sb = new StringBuilder();
-			for (Nonterminal nonterm : cfg.nonterminals) {
-				sb.append(nonterm.name + " -> ");
-				sb.append(visit(nonterm.node));
-				sb.append("\n");
-			}
-			return sb.toString();
-		}		
 	}
 }

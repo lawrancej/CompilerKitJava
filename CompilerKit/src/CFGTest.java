@@ -1,5 +1,8 @@
 import static com.joeylawrance.language.ContextFree.*;
 
+import com.joeylawrance.language.CFG;
+import com.joeylawrance.language.Nonterminal;
+
 
 // TODO: make this an honest to goodness jUnit test suite try for 100% branch coverage
 public class CFGTest {

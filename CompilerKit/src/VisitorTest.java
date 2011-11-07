@@ -9,7 +9,7 @@ import com.joeylawrance.visitor.Visitable;
 import com.joeylawrance.visitor.Visitor;
 
 //TODO: make this an honest to goodness jUnit test suite try for 100% branch coverage
-public class LookupVisitorTest {
+public class VisitorTest {
 	public static class SlowPrintVisitor extends ReflectiveVisitor<Void> {
 		public Void visit(Component node) {
 			for (IndexedVisitable v : node.nodes) {
