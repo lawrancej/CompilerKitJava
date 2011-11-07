@@ -16,11 +16,11 @@ import com.joeylawrance.visitor.Visitor;
 public class ContextFree extends Regular {
 	// FIXME: nonterminals
 	static class Grammar extends Parser {
-		public ReflectiveVisitor<String> getPrinter() {
+		public Visitor<Parser,String> getPrinter() {
 			return new StringVisitor();
 		}
 		@Override
-		public DerivativeVisitor<Object, Parser> getDerivative() {
+		public DerivativeVisitor<Parser, Parser> getDerivative() {
 			return new ContextFreeDerivativeVisitor(ContextFreeNullableVisitor.nullable);
 		}
 	}
@@ -139,7 +139,7 @@ public class ContextFree extends Regular {
 		}
 	}
 	static class ContextFreeDerivativeVisitor extends RegularDerivativeVisitor {
-		public ContextFreeDerivativeVisitor(Visitor<Object, Parser> nullable) {
+		public ContextFreeDerivativeVisitor(Visitor<Parser, Parser> nullable) {
 			super(nullable);
 		}
 		//FIXME

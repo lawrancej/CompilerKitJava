@@ -1,8 +1,8 @@
 package com.joeylawrance.language;
 
-import com.joeylawrance.visitor.ChildVisitor;
+import com.joeylawrance.visitor.VisitorEntry;
 
-public abstract class EquivalentExpressionVisitor<T> implements ChildVisitor<Parser, EquivalentExpression, T> {
+public abstract class EquivalentExpressionVisitor<T> implements VisitorEntry<Parser, EquivalentExpression, T> {
 
 	@Override
 	public T visit(EquivalentExpression node) {

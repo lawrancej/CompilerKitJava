@@ -1,13 +1,14 @@
 package com.joeylawrance.language;
 
 import com.joeylawrance.visitor.ReflectiveVisitor;
+import com.joeylawrance.visitor.Visitor;
 
 class Expression extends Parser {
-	public ReflectiveVisitor<String> getPrinter() {
+	public Visitor<Parser,String> getPrinter() {
 		return new StringVisitor();
 	}
 
-	public DerivativeVisitor<Object, Parser> getDerivative() {
+	public DerivativeVisitor<Parser, Parser> getDerivative() {
 		return new RegularDerivativeVisitor(RegularNullableVisitor.nullable);
 	}
 }

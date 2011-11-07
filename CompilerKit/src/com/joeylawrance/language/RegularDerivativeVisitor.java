@@ -2,11 +2,15 @@ package com.joeylawrance.language;
 
 import com.joeylawrance.visitor.Visitor;
 
-class RegularDerivativeVisitor extends RegularVisitor<Parser> implements DerivativeVisitor<Object,Parser> {
+class RegularDerivativeVisitor extends RegularVisitor<Parser> implements DerivativeVisitor<Parser,Parser> {
 	// TODO: use memoization for performance improvements?
 	public char c;
-	Visitor<Object,Parser> nullable;
-	public RegularDerivativeVisitor(Visitor<Object,Parser> nullable) {this.nullable = nullable;}
+	Visitor<Parser,Parser> nullable;
+	public RegularDerivativeVisitor(Visitor<Parser,Parser> nullable) {this.nullable = nullable;}
+	@Override
+	public Visitor<Parser, Parser> getNullable() {
+		return nullable;
+	}
 	public Parser visit(EmptySet emptySet)       { return emptySet; }
 	public Parser visit(EmptyString emptyString) { return EmptySet.emptySet; }
 	public Parser visit(Symbol symbol)           { return (symbol.c == c) ? EmptyString.emptyString : EmptySet.emptySet; }
@@ -76,9 +80,5 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 	public void setSymbol(char c) {
 		// TODO Auto-generated method stub
 		this.c = c;
-	}
-	@Override
-	public Visitor<Object, Parser> getNullable() {
-		return nullable;
 	}
 }

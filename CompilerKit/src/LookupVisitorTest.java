@@ -2,11 +2,11 @@ import java.util.ArrayList;
 
 import com.joeylawrance.visitor.IndexedVisitable;
 import com.joeylawrance.visitor.IndexedVisitor2;
-import com.joeylawrance.visitor.LookupVisitor;
+import com.joeylawrance.visitor.DefaultVisitorEntry;
+import com.joeylawrance.visitor.VisitorMap;
 import com.joeylawrance.visitor.ReflectiveVisitor;
 import com.joeylawrance.visitor.Visitable;
 import com.joeylawrance.visitor.Visitor;
-import com.joeylawrance.visitor.ChildVisitor;
 
 //TODO: make this an honest to goodness jUnit test suite try for 100% branch coverage
 public class LookupVisitorTest {
@@ -47,9 +47,9 @@ public class LookupVisitorTest {
 		l.str = str;
 		return l;
 	}
-	static class PrintVisitor extends LookupVisitor<Visitable,Void> {
+	static class PrintVisitor extends VisitorMap<Visitable,Void> {
 		PrintVisitor() {
-			this.register(Component.class, new ChildVisitor<Visitable,Component,Void>() {
+			this.register(Component.class, new DefaultVisitorEntry<Visitable,Component,Void>() {
 				@Override
 				public Void visit(Component node) {
 					for (IndexedVisitable v : node.nodes) {
@@ -57,20 +57,10 @@ public class LookupVisitorTest {
 					}
 					return null;
 				}
-
-				@Override
-				public Visitor<Visitable, Void> getParent() {
-					return PrintVisitor.this;
-				}
 			});
-			this.register(Leaf.class, new ChildVisitor<Visitable,Leaf,Void>() {
+			this.register(Leaf.class, new DefaultVisitorEntry<Visitable,Leaf,Void>() {
 				@Override
 				public Void visit(Leaf node) {
-					return null;
-				}
-
-				@Override
-				public Visitor<Visitable, Void> getParent() {
 					return null;
 				}
 			});

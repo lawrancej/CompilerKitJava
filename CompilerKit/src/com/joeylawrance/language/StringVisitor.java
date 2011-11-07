@@ -1,7 +1,49 @@
 package com.joeylawrance.language;
 
+import com.joeylawrance.visitor.DefaultVisitorEntry;
+
 // FIXME: unescape escape sequences
 class StringVisitor extends RegularVisitor<String> {
+	StringVisitor() {
+		this.register(EmptySet.class, new DefaultVisitorEntry<Parser,EmptySet,String>() {
+			public String visit(EmptySet node) { return "{}"; }
+		});
+		this.register(EmptyString.class, new DefaultVisitorEntry<Parser,EmptyString,String>() {
+			public String visit(EmptyString node) { return "λ"; }
+		});
+		this.register(Symbol.class, new DefaultVisitorEntry<Parser,Symbol,String>() {
+			public String visit(Symbol symbol) { return "" + symbol.c; }
+		});
+		this.register(Alternation.class, new DefaultVisitorEntry<Parser,Alternation,String>() {
+			public String visit(Alternation alternation) {
+				return getParent().visit(alternation.left) + "|" + getParent().visit(alternation.right);
+			}
+		});
+		this.register(Catenation.class, new DefaultVisitorEntry<Parser,Catenation,String>() {
+			public String visit(Catenation catenation) {
+				StringBuilder sb = new StringBuilder();
+				if (catenation.left instanceof Alternation)
+					sb.append("(" + getParent().visit(catenation.left) + ")");
+				else
+					sb.append(getParent().visit(catenation.left));
+				if (catenation.right instanceof Alternation)
+					sb.append("(" + getParent().visit(catenation.right) + ")");
+				else
+					sb.append(getParent().visit(catenation.right));
+				return sb.toString();
+			}
+		});
+		this.register(KleeneClosure.class, new DefaultVisitorEntry<Parser,KleeneClosure,String>() {
+			public String visit(KleeneClosure kleeneClosure) {
+				return "(" + getParent().visit(kleeneClosure.node) + ")*";
+			}
+		});
+		this.register(PositiveClosure.class, new DefaultVisitorEntry<Parser,PositiveClosure,String>() {
+			public String visit(PositiveClosure positiveClosure) {
+				return "(" + getParent().visit(positiveClosure.node) + ")+";
+			}
+		});
+	}
 	public String visit(EmptySet emptySet)       { return "{}"; }
 	public String visit(EmptyString emptyString) { return "λ"; }
 	public String visit(Symbol symbol)           { return "" + symbol.c; }
