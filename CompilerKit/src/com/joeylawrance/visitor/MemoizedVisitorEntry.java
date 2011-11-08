@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 /**
  * MemoizedVisitorEntry is a wrapper around VisitorEntries that caches results.
- * It assumes the visit computation has no side-effects.
+ * It assumes that the visit method has no side effects, and the state (if any) can be parameterized to one object.
  *
  * @param <BaseNodeType> The base node type
  * @param <NodeType>     The specific node type
@@ -19,7 +19,7 @@ public class MemoizedVisitorEntry<BaseNodeType, NodeType, ReturnType> implements
 		this.visitor = visitor;
 	}
 	public static void setState(Object state) {
-		MemoizedVisitorEntry.state = state; // FIXME: not thread safe :(
+		MemoizedVisitorEntry.state = state; // FIXME: not thread safe :( // you can fix by having a hash map of visitors to states
 	}
 	@SuppressWarnings("unchecked")
 	@Override
