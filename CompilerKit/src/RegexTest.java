@@ -8,8 +8,10 @@ public class RegexTest {
 		Parser r = catenation(times(alpha(),3,8), optional(digit()), string("@bridgew.edu"));
 		long before = System.currentTimeMillis();
 		System.out.println(r);
+		for (int i = 0; i < 725; i++) {
 		System.out.println(r.recognize("somebody@bridgew.edu"));
 		System.out.println(r.recognize("somebody@wit.edu"));
+		}
 		System.out.println(System.currentTimeMillis() - before); // 12ms is better than before
 		r = catenation(not(symbol('\n')), string("\n"));
 		System.out.println(r);

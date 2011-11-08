@@ -1,15 +1,18 @@
 package com.joeylawrance.visitor;
 
-public abstract class DefaultVisitorEntry<R,S,T> implements VisitorEntry<R, S, T> {
-	Visitor<R,T> parent;
-	@Override
-	public Visitor<R, T> getParent() {
+/**
+ * Default Visitor Entry implements the getParent() and setParent(Visitor) methods
+ *
+ * @param <BaseNodeType> The base node type
+ * @param <NodeType>     The specific node type
+ * @param <ReturnType>   The return type
+ */
+public abstract class DefaultVisitorEntry<BaseNodeType,NodeType,ReturnType> implements VisitorEntry<BaseNodeType, NodeType, ReturnType> {
+	Visitor<BaseNodeType,ReturnType> parent;
+	public Visitor<BaseNodeType, ReturnType> getParent() {
 		return parent;
 	}
-
-	@Override
-	public void setParent(Visitor<R, T> parent) {
+	public void setParent(Visitor<BaseNodeType, ReturnType> parent) {
 		this.parent = parent;
 	}
-
 }
