@@ -2,7 +2,6 @@ package com.joeylawrance.visitor;
 
 import java.util.HashMap;
 
-// TODO: make a MemoizedVisitorEntry class that handles side effects
 /**
  * MemoizedVisitorEntry is a wrapper around VisitorEntries that caches results.
  * It assumes the visit computation has no side-effects.
@@ -12,21 +11,31 @@ import java.util.HashMap;
  * @param <ReturnType>   The return type
  */
 public class MemoizedVisitorEntry<BaseNodeType, NodeType, ReturnType> implements VisitorEntry<BaseNodeType, NodeType, ReturnType> {
-	private static HashMap<Object, Object> table = new HashMap<Object, Object>();
-	
+	private static HashMap<Object,HashMap<Object, Object>> table = new HashMap<Object, HashMap<Object, Object>>();
+	private static Object state;
 	private VisitorEntry<BaseNodeType, NodeType, ReturnType> visitor;
+	
 	public MemoizedVisitorEntry(VisitorEntry<BaseNodeType, NodeType, ReturnType> visitor) {
 		this.visitor = visitor;
 	}
-
+	public static void setState(Object state) {
+		MemoizedVisitorEntry.state = state; // FIXME: not thread safe :(
+	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public ReturnType visit(NodeType node) {
-		if (table.containsKey(node)) {
-			return (ReturnType) table.get(node);
+		HashMap<Object,Object> memo;
+		if (table.containsKey(state)) {
+			memo = table.get(state);
+		} else {
+			memo = new HashMap<Object,Object>();
+			table.put(state, memo);
+		}
+		if (memo.containsKey(node)) {
+			return (ReturnType) memo.get(node);
 		} else {
 			ReturnType result = visitor.visit(node);
-			table.put(node, result);
+			memo.put(node, result);
 			return result;
 		}
 	}

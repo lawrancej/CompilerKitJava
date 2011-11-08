@@ -2,10 +2,10 @@ package com.joeylawrance.language;
 
 import com.joeylawrance.visitor.DefaultVisitorEntry;
 import com.joeylawrance.visitor.IdentityVisitor;
+import com.joeylawrance.visitor.MemoizedVisitorEntry;
 import com.joeylawrance.visitor.Visitor;
 
 class RegularDerivativeVisitor extends RegularVisitor<Parser> implements DerivativeVisitor<Parser,Parser> {
-	// TODO: use memoization for performance improvements?
 	public char c;
 	Visitor<Parser,Parser> nullable;
 	public RegularDerivativeVisitor(Visitor<Parser,Parser> nullable) {
@@ -18,7 +18,7 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 				return (symbol.c == ((RegularDerivativeVisitor)getParent()).getSymbol()) ? EmptyString.emptyString : EmptySet.emptySet;
 			}
 		});
-		this.register(Alternation.class, new DefaultVisitorEntry<Parser,Alternation,Parser>() {
+		this.register(Alternation.class, new MemoizedVisitorEntry<Parser,Alternation,Parser>(new DefaultVisitorEntry<Parser,Alternation,Parser>() {
 			public Parser visit(Alternation alternation) {
 				Parser left = getParent().visit(alternation.left);
 				Parser right = getParent().visit(alternation.right);
@@ -28,8 +28,8 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 				else return new Alternation(left, right);
 				// return new Alternation(visit(alternation.left), visit(alternation.right));			
 			}
-		});
-		this.register(Catenation.class, new DefaultVisitorEntry<Parser,Catenation,Parser>() {
+		}));
+		this.register(Catenation.class, new MemoizedVisitorEntry<Parser,Catenation,Parser>(new DefaultVisitorEntry<Parser,Catenation,Parser>() {
 			public Parser visit(Catenation catenation) {
 				Parser left = getParent().visit(catenation.left);
 				Parser right = getParent().visit(catenation.right);
@@ -58,33 +58,33 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 //						new Catenation (visit(catenation.left), catenation.right),
 //						new Catenation (NullableVisitor.nullable.visit(catenation.left),visit(catenation.right)));
 			}
-		});
-		this.register(KleeneClosure.class,new DefaultVisitorEntry<Parser,KleeneClosure,Parser>() {
+		}));
+		this.register(KleeneClosure.class,new MemoizedVisitorEntry<Parser,KleeneClosure,Parser>(new DefaultVisitorEntry<Parser,KleeneClosure,Parser>() {
 			public Parser visit(KleeneClosure kleeneClosure) {
 				Parser left = getParent().visit(kleeneClosure.node);
 				if (left == EmptyString.emptyString) return kleeneClosure;
 				else if (left == EmptySet.emptySet) return EmptySet.emptySet;
 				return new Catenation (left, kleeneClosure);
 			}			
-		});
-		this.register(Complement.class, new DefaultVisitorEntry<Parser,Complement,Parser>() {
+		}));
+		this.register(Complement.class, new MemoizedVisitorEntry<Parser,Complement,Parser>(new DefaultVisitorEntry<Parser,Complement,Parser>() {
 			public Complement visit(Complement not) {
 				return new Complement(getParent().visit(not.node));
 			}
-		});
-		this.register(CharacterRange.class, new DefaultVisitorEntry<Parser,CharacterRange,Parser>() {
+		}));
+		this.register(CharacterRange.class, new MemoizedVisitorEntry<Parser,CharacterRange,Parser>(new DefaultVisitorEntry<Parser,CharacterRange,Parser>() {
 			public Parser visit(CharacterRange characterRange) {
 				return (characterRange.start <= c && c <= characterRange.end) ? EmptyString.emptyString : EmptySet.emptySet;
 			}
-		});
-		this.register(Intersection.class, new DefaultVisitorEntry<Parser,Intersection,Parser>(){
+		}));
+		this.register(Intersection.class, new MemoizedVisitorEntry<Parser,Intersection,Parser>(new DefaultVisitorEntry<Parser,Intersection,Parser>(){
 			public Parser visit(Intersection intersection) {
 				Parser left = getParent().visit(intersection.left);
 				Parser right = getParent().visit(intersection.right);
 				if (left == right) return right;
 				return new Intersection(left, right);
 			}
-		});
+		}));
 	}
 	@Override
 	public Visitor<Parser, Parser> getNullable() {
@@ -157,5 +157,6 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 	public void setSymbol(char c) {
 		// TODO Auto-generated method stub
 		this.c = c;
+		MemoizedVisitorEntry.setState(new Character(c));
 	}
 }

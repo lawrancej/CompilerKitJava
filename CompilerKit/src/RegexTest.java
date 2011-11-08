@@ -5,14 +5,14 @@ import com.joeylawrance.language.Parser;
 public class RegexTest {
 
 	public static void main(String[] args) {
-		Parser r = catenation(times(alpha(),3,8), optional(digit()), string("@bridgew.edu"));
+		Parser r = catenation(times(alpha(),3,8), positiveClosure(digit()), string("@bridgew.edu"));
 		long before = System.currentTimeMillis();
 		System.out.println(r);
-		for (int i = 0; i < 725; i++) {
-		System.out.println(r.recognize("somebody@bridgew.edu"));
-		System.out.println(r.recognize("somebody@wit.edu"));
+		for (int i = 0; i < 10000; i++) {
+		r.recognize("somebody"+i+"@bridgew.edu");
+		r.recognize("somebody"+i+"@wit.edu");
 		}
-		System.out.println(System.currentTimeMillis() - before); // 12ms is better than before
+		System.out.println(System.currentTimeMillis() - before); // 125ms for 10000 iterations is MUCH better than before
 		r = catenation(not(symbol('\n')), string("\n"));
 		System.out.println(r);
 		System.out.println(r.recognize("abc\n\n"));
