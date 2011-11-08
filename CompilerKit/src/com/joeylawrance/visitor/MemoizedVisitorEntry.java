@@ -4,27 +4,26 @@ import java.util.HashMap;
 
 /**
  * MemoizedVisitorEntry is a wrapper around VisitorEntries that caches results.
- * It assumes that the visit method has no side effects, and the state (if any) can be parameterized to one object.
  *
  * @param <BaseNodeType> The base node type
  * @param <NodeType>     The specific node type
  * @param <ReturnType>   The return type
  */
 public class MemoizedVisitorEntry<BaseNodeType, NodeType, ReturnType> implements VisitorEntry<BaseNodeType, NodeType, ReturnType> {
+	// table maps the current state and node type to the return type
 	private static HashMap<Object,HashMap<Object, Object>> table = new HashMap<Object, HashMap<Object, Object>>();
-	private static Object state;
+	private VisitorMap<BaseNodeType, ReturnType> parent;
+	
 	private VisitorEntry<BaseNodeType, NodeType, ReturnType> visitor;
 	
 	public MemoizedVisitorEntry(VisitorEntry<BaseNodeType, NodeType, ReturnType> visitor) {
 		this.visitor = visitor;
 	}
-	public static void setState(Object state) {
-		MemoizedVisitorEntry.state = state; // FIXME: not thread safe :( // you can fix by having a hash map of visitors to states
-	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public ReturnType visit(NodeType node) {
 		HashMap<Object,Object> memo;
+		Object state = parent.getState();
 		if (table.containsKey(state)) {
 			memo = table.get(state);
 		} else {
@@ -39,15 +38,11 @@ public class MemoizedVisitorEntry<BaseNodeType, NodeType, ReturnType> implements
 			return result;
 		}
 	}
-
-	@Override
 	public Visitor<BaseNodeType, ReturnType> getParent() {
-		return visitor.getParent();
+		return parent;
 	}
-
-	@Override
 	public void setParent(Visitor<BaseNodeType, ReturnType> parent) {
+		this.parent = (VisitorMap<BaseNodeType, ReturnType>)parent;
 		visitor.setParent(parent);
 	}
-
 }

@@ -157,6 +157,6 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 	public void setSymbol(char c) {
 		// TODO Auto-generated method stub
 		this.c = c;
-		MemoizedVisitorEntry.setState(new Character(c));
+		setState(new Character(c));
 	}
 }

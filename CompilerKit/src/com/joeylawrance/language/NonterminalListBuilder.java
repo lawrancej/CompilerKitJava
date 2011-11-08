@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import com.joeylawrance.visitor.DefaultVisitorEntry;
 import com.joeylawrance.visitor.NullVisitorEntry;
 
-// FIXME: TODO: this is preventing CFGTest from working
 class NonterminalListBuilder extends ContextFreeVisitor<Void> {
 	CFG grammar;
 	public NonterminalListBuilder() {

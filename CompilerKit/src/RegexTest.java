@@ -9,8 +9,8 @@ public class RegexTest {
 		long before = System.currentTimeMillis();
 		System.out.println(r);
 		for (int i = 0; i < 10000; i++) {
-		r.recognize("somebody"+i+"@bridgew.edu");
-		r.recognize("somebody"+i+"@wit.edu");
+			r.recognize("somebody"+i+"@bridgew.edu");
+			r.recognize("somebody"+i+"@wit.edu");
 		}
 		System.out.println(System.currentTimeMillis() - before); // 125ms for 10000 iterations is MUCH better than before
 		r = catenation(not(symbol('\n')), string("\n"));
