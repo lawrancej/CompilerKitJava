@@ -15,7 +15,7 @@ public abstract class Parser {
 	public String toString () {
 		return getPrinter().visit(this);
 	}
-	public boolean recognize (CharSequence str) { // Move outside, because of visibility issues and besides, this wont work with Regular and Context-Free
+	public boolean recognize (CharSequence str) { // TODO: Move outside to Match class, because of visibility issues and besides, this wont work with Regular and Context-Free
 		Parser parser = this;
 		DerivativeVisitor<Parser,Parser> derivative = getDerivative();
 		for (int i = 0; i < str.length(); i++) {

@@ -12,7 +12,7 @@ import com.joeylawrance.visitor.VisitorMap;
  * parser ought to be an interface
  * the root of the nodes (e.g., regex, terminal, cfg) ought to be an object
  */
-
+// TODO: remove the extra visit methods
 abstract class RegularVisitor<T> extends VisitorMap<Parser,T> {
 	RegularVisitor() {
 		this.register(PositiveClosure.class, new DefaultVisitorEntry<Parser,PositiveClosure,T>() {
