@@ -2,6 +2,7 @@ package com.joeylawrance.language;
 
 import java.util.HashMap;
 
+import com.joeylawrance.language.parsers.CFG;
 import com.joeylawrance.visitor.DefaultVisitorEntry;
 
 class ContextFreeNullableVisitor extends RegularNullableVisitor {
@@ -20,7 +21,7 @@ class ContextFreeNullableVisitor extends RegularNullableVisitor {
 		});
 		this.register(CFG.class, new DefaultVisitorEntry<Parser,CFG,Parser>() {
 			public Parser visit(CFG cfg) {
-				return getParent().visit(cfg.start);
+				return getParent().visit(cfg.getStart());
 			}
 		});
 	}
@@ -31,6 +32,6 @@ class ContextFreeNullableVisitor extends RegularNullableVisitor {
 		return map.get(nonterminal);
 	}
 	public Parser visit(CFG cfg) {
-		return visit(cfg.start);
+		return visit(cfg.getStart());
 	}
 }

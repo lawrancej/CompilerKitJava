@@ -2,6 +2,16 @@ package com.joeylawrance.language;
 
 import java.util.ArrayList;
 
+import com.joeylawrance.language.parsers.Alternation;
+import com.joeylawrance.language.parsers.CFG;
+import com.joeylawrance.language.parsers.Catenation;
+import com.joeylawrance.language.parsers.Complement;
+import com.joeylawrance.language.parsers.Difference;
+import com.joeylawrance.language.parsers.EmptySet;
+import com.joeylawrance.language.parsers.EmptyString;
+import com.joeylawrance.language.parsers.Intersection;
+import com.joeylawrance.language.parsers.KleeneClosure;
+import com.joeylawrance.language.parsers.Symbol;
 import com.joeylawrance.visitor.DefaultVisitorEntry;
 import com.joeylawrance.visitor.NullVisitorEntry;
 
@@ -43,21 +53,21 @@ class NonterminalListBuilder extends ContextFreeVisitor<Void> {
 		});
 		this.register(Complement.class, new DefaultVisitorEntry<Parser,Complement,Void>() {
 			public Void visit(Complement not) {
-				getParent().visit(not.node);
+				getParent().visit(not.getNode());
 				return null;
 			}
 		});		
 		this.register(KleeneClosure.class, new DefaultVisitorEntry<Parser,KleeneClosure,Void>() {
 			public Void visit(KleeneClosure kleeneClosure) {
-				getParent().visit(kleeneClosure.node);
+				getParent().visit(kleeneClosure.getNode());
 				return null;
 			}
 		});
 		this.register(Nonterminal.class, new DefaultVisitorEntry<Parser,Nonterminal,Void>() {
 			public Void visit(Nonterminal nonterminal) {
 				// Halt on a rule like: S -> S
-				if (!grammar.nonterminals.contains(nonterminal)) {
-					grammar.nonterminals.add(nonterminal);
+				if (!grammar.getNonterminals().contains(nonterminal)) {
+					grammar.getNonterminals().add(nonterminal);
 					getParent().visit(nonterminal.node);
 				}
 				return null;
@@ -66,8 +76,8 @@ class NonterminalListBuilder extends ContextFreeVisitor<Void> {
 		this.register(CFG.class, new DefaultVisitorEntry<Parser,CFG,Void>() {
 			public Void visit(CFG cfg) {
 				grammar = cfg;
-				grammar.nonterminals = new ArrayList<Nonterminal>();
-				getParent().visit(cfg.start);
+				grammar.setNonterminals(new ArrayList<Nonterminal>());
+				getParent().visit(cfg.getStart());
 				return null;
 			}
 		});
@@ -86,25 +96,25 @@ class NonterminalListBuilder extends ContextFreeVisitor<Void> {
 		return null;
 	}
 	public Void visit(KleeneClosure kleeneClosure) {
-		visit(kleeneClosure.node);
+		visit(kleeneClosure.getNode());
 		return null;
 	}
 	public Void visit(Complement not) {
-		visit(not.node);
+		visit(not.getNode());
 		return null;
 	}
 	public Void visit(Nonterminal nonterminal) {
 		// Halt on a rule like: S -> S
-		if (!grammar.nonterminals.contains(nonterminal)) {
-			grammar.nonterminals.add(nonterminal);
+		if (!grammar.getNonterminals().contains(nonterminal)) {
+			grammar.getNonterminals().add(nonterminal);
 			visit(nonterminal.node);
 		}
 		return null;
 	}
 	public Void visit(CFG cfg) {
 		grammar = cfg;
-		grammar.nonterminals = new ArrayList<Nonterminal>();
-		visit(cfg.start);
+		grammar.setNonterminals(new ArrayList<Nonterminal>());
+		visit(cfg.getStart());
 		return null;
 	}
 	@Override

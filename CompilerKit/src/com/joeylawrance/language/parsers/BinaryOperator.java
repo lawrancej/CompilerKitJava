@@ -1,4 +1,7 @@
-package com.joeylawrance.language;
+package com.joeylawrance.language.parsers;
+
+import com.joeylawrance.language.Expression;
+import com.joeylawrance.language.Parser;
 
 public class BinaryOperator extends Expression {
 	private Parser left;

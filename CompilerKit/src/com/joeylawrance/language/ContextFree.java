@@ -2,6 +2,15 @@ package com.joeylawrance.language;
 
 import java.util.HashSet;
 
+import com.joeylawrance.language.parsers.Alternation;
+import com.joeylawrance.language.parsers.CFG;
+import com.joeylawrance.language.parsers.Catenation;
+import com.joeylawrance.language.parsers.Complement;
+import com.joeylawrance.language.parsers.EmptySet;
+import com.joeylawrance.language.parsers.EmptyString;
+import com.joeylawrance.language.parsers.Intersection;
+import com.joeylawrance.language.parsers.KleeneClosure;
+import com.joeylawrance.language.parsers.Symbol;
 import com.joeylawrance.visitor.DefaultVisitorEntry;
 import com.joeylawrance.visitor.Visitor;
 
@@ -82,7 +91,7 @@ public class ContextFree extends Regular {
 			});
 			this.register(CFG.class, new DefaultVisitorEntry<Parser,CFG,Parser>() {
 				public Parser visit(CFG cfg) {
-					CFG result = new CFG((Nonterminal)getParent().visit(cfg.start));
+					CFG result = new CFG((Nonterminal)getParent().visit(cfg.getStart()));
 					return result;
 				}				
 			});
@@ -117,7 +126,7 @@ public class ContextFree extends Regular {
 			}
 		}
 		public Parser visit(CFG cfg) {
-			CFG result = new CFG(visit(cfg.start));
+			CFG result = new CFG(visit(cfg.getStart()));
 			return result;
 		}
 		public HashSet<Nonterminal> set = new HashSet<Nonterminal>();

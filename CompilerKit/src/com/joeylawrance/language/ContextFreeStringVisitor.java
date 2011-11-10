@@ -1,5 +1,6 @@
 package com.joeylawrance.language;
 
+import com.joeylawrance.language.parsers.CFG;
 import com.joeylawrance.visitor.DefaultVisitorEntry;
 
 class ContextFreeStringVisitor extends RegularStringVisitor {
@@ -14,7 +15,7 @@ class ContextFreeStringVisitor extends RegularStringVisitor {
 			public String visit(CFG cfg) {
 				ContextFree.builder.visit(cfg);
 				StringBuilder sb = new StringBuilder();
-				for (Nonterminal nonterm : cfg.nonterminals) {
+				for (Nonterminal nonterm : cfg.getNonterminals()) {
 					sb.append(nonterm.name + " -> ");
 					sb.append(getParent().visit(nonterm.node));
 					sb.append("\n");

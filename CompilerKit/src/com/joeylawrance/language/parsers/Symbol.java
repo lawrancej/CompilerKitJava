@@ -1,10 +1,13 @@
-package com.joeylawrance.language;
+package com.joeylawrance.language.parsers;
 
 import java.util.HashMap;
 
-class Symbol extends Expression {
-	final char c;
-	static final HashMap<Character, Symbol> flyweight = new HashMap<Character, Symbol>();
+import com.joeylawrance.language.Expression;
+
+
+public class Symbol extends Expression {
+	public final char c;
+	private static final HashMap<Character, Symbol> flyweight = new HashMap<Character, Symbol>();
 	// Limit construction to use memory wisely
 	private Symbol (char c) { this.c = c; }
 	public static Symbol symbol (char c) {

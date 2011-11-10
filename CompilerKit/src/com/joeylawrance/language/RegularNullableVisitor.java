@@ -1,5 +1,13 @@
 package com.joeylawrance.language;
 
+import com.joeylawrance.language.parsers.Alternation;
+import com.joeylawrance.language.parsers.Catenation;
+import com.joeylawrance.language.parsers.Complement;
+import com.joeylawrance.language.parsers.EmptySet;
+import com.joeylawrance.language.parsers.EmptyString;
+import com.joeylawrance.language.parsers.Intersection;
+import com.joeylawrance.language.parsers.KleeneClosure;
+import com.joeylawrance.language.parsers.Symbol;
 import com.joeylawrance.visitor.DefaultVisitorEntry;
 import com.joeylawrance.visitor.IdentityVisitor;
 
@@ -38,7 +46,7 @@ class RegularNullableVisitor extends RegularVisitor<Parser> {
 		});
 		this.register(Complement.class, new DefaultVisitorEntry<Parser,Complement,Parser>() {
 			public Parser visit(Complement complement) {
-				if (getParent().visit(complement.node) == EmptySet.emptySet)
+				if (getParent().visit(complement.getNode()) == EmptySet.emptySet)
 					return EmptyString.emptyString;
 				else return EmptySet.emptySet;
 			}			
@@ -72,7 +80,7 @@ class RegularNullableVisitor extends RegularVisitor<Parser> {
 	}
 	public Parser visit(KleeneClosure kleeneClosure) { return EmptyString.emptyString; }
 	public Parser visit(Complement complement) {
-		if (visit(complement.node) == EmptySet.emptySet)
+		if (visit(complement.getNode()) == EmptySet.emptySet)
 			return EmptyString.emptyString;
 		else return EmptySet.emptySet;
 	}

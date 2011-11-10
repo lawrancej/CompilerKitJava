@@ -1,5 +1,6 @@
 package com.joeylawrance.language;
 
+import com.joeylawrance.language.parsers.EquivalentExpression;
 import com.joeylawrance.visitor.VisitorEntry;
 
 public abstract class EquivalentExpressionVisitor<T> implements VisitorEntry<Parser, EquivalentExpression, T> {

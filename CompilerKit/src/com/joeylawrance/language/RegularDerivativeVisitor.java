@@ -1,5 +1,14 @@
 package com.joeylawrance.language;
 
+import com.joeylawrance.language.parsers.Alternation;
+import com.joeylawrance.language.parsers.Catenation;
+import com.joeylawrance.language.parsers.CharacterRange;
+import com.joeylawrance.language.parsers.Complement;
+import com.joeylawrance.language.parsers.EmptySet;
+import com.joeylawrance.language.parsers.EmptyString;
+import com.joeylawrance.language.parsers.Intersection;
+import com.joeylawrance.language.parsers.KleeneClosure;
+import com.joeylawrance.language.parsers.Symbol;
 import com.joeylawrance.visitor.DefaultVisitorEntry;
 import com.joeylawrance.visitor.IdentityVisitor;
 import com.joeylawrance.visitor.MemoizedVisitorEntry;
@@ -61,7 +70,7 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 		}));
 		this.register(KleeneClosure.class,new MemoizedVisitorEntry<Parser,KleeneClosure,Parser>(new DefaultVisitorEntry<Parser,KleeneClosure,Parser>() {
 			public Parser visit(KleeneClosure kleeneClosure) {
-				Parser left = getParent().visit(kleeneClosure.node);
+				Parser left = getParent().visit(kleeneClosure.getNode());
 				if (left == EmptyString.emptyString) return kleeneClosure;
 				else if (left == EmptySet.emptySet) return EmptySet.emptySet;
 				return new Catenation (left, kleeneClosure);
@@ -69,12 +78,12 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 		}));
 		this.register(Complement.class, new MemoizedVisitorEntry<Parser,Complement,Parser>(new DefaultVisitorEntry<Parser,Complement,Parser>() {
 			public Complement visit(Complement not) {
-				return new Complement(getParent().visit(not.node));
+				return new Complement(getParent().visit(not.getNode()));
 			}
 		}));
 		this.register(CharacterRange.class, new MemoizedVisitorEntry<Parser,CharacterRange,Parser>(new DefaultVisitorEntry<Parser,CharacterRange,Parser>() {
 			public Parser visit(CharacterRange characterRange) {
-				return (characterRange.start <= c && c <= characterRange.end) ? EmptyString.emptyString : EmptySet.emptySet;
+				return (characterRange.getStart() <= c && c <= characterRange.getEnd()) ? EmptyString.emptyString : EmptySet.emptySet;
 			}
 		}));
 		this.register(Intersection.class, new MemoizedVisitorEntry<Parser,Intersection,Parser>(new DefaultVisitorEntry<Parser,Intersection,Parser>(){
@@ -131,16 +140,16 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 //				new Catenation (NullableVisitor.nullable.visit(catenation.left),visit(catenation.right)));
 	}
 	public Parser visit(KleeneClosure kleeneClosure) {
-		Parser left = visit(kleeneClosure.node);
+		Parser left = visit(kleeneClosure.getNode());
 		if (left == EmptyString.emptyString) return kleeneClosure;
 		else if (left == EmptySet.emptySet) return EmptySet.emptySet;
 		return new Catenation (left, kleeneClosure);
 	}
 	public Complement visit(Complement not) {
-		return new Complement(visit(not.node));
+		return new Complement(visit(not.getNode()));
 	}
 	public Parser visit(CharacterRange characterRange) {
-		return (characterRange.start <= c && c <= characterRange.end) ? EmptyString.emptyString : EmptySet.emptySet;
+		return (characterRange.getStart() <= c && c <= characterRange.getEnd()) ? EmptyString.emptyString : EmptySet.emptySet;
 	}
 	public Parser visit(Intersection intersection) {
 		Parser left = visit(intersection.getLeft());

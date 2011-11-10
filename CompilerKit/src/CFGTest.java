@@ -1,7 +1,7 @@
 import static com.joeylawrance.language.ContextFree.*;
 
-import com.joeylawrance.language.CFG;
 import com.joeylawrance.language.Nonterminal;
+import com.joeylawrance.language.parsers.CFG;
 
 
 // TODO: make this an honest to goodness jUnit test suite try for 100% branch coverage

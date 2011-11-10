@@ -1,6 +1,8 @@
-package com.joeylawrance.language;
+package com.joeylawrance.language.parsers;
 
-class Catenation extends BinaryOperator {
+import com.joeylawrance.language.Parser;
+
+public class Catenation extends BinaryOperator {
 	public Catenation(Parser left, Parser right) { super(left, right); }
 
 	public static Catenation catenation (Parser ... parsers) {

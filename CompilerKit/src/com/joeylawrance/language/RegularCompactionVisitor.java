@@ -1,5 +1,14 @@
 package com.joeylawrance.language;
 
+import com.joeylawrance.language.parsers.Alternation;
+import com.joeylawrance.language.parsers.Catenation;
+import com.joeylawrance.language.parsers.Complement;
+import com.joeylawrance.language.parsers.EmptySet;
+import com.joeylawrance.language.parsers.EmptyString;
+import com.joeylawrance.language.parsers.Intersection;
+import com.joeylawrance.language.parsers.KleeneClosure;
+import com.joeylawrance.language.parsers.Symbol;
+
 class RegularCompactionVisitor extends RegularVisitor<Parser> {
 	static final RegularCompactionVisitor compactor = new RegularCompactionVisitor();
 	public Parser visit(EmptySet emptySet)       { return emptySet; }
@@ -20,10 +29,10 @@ class RegularCompactionVisitor extends RegularVisitor<Parser> {
 		else return new Catenation(left, right);
 	}
 	public Parser visit(KleeneClosure kleeneClosure) {
-		return new KleeneClosure(visit(kleeneClosure.node));
+		return new KleeneClosure(visit(kleeneClosure.getNode()));
 	}
 	public Parser visit(Complement complement) {
-		return new Complement(visit(complement.node));
+		return new Complement(visit(complement.getNode()));
 	}
 	public Parser visit(Intersection intersection) {
 		Parser left = visit(intersection.getLeft());

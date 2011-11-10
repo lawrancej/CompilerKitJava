@@ -1,4 +1,6 @@
-package com.joeylawrance.language;
+package com.joeylawrance.language.parsers;
+
+import com.joeylawrance.language.Parser;
 
 public class Alternation extends BinaryOperator {
 	public Alternation(Parser left, Parser right) { super(left, right); }
