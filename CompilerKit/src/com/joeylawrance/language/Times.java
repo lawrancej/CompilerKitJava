@@ -7,14 +7,9 @@ class Times extends EquivalentExpression {
 		this(node,hi,hi);
 	}
 	public Times (Parser node, int lo, int hi) {
-		if (lo <= hi) {
-			this.lo = lo;
-			this.hi = hi;
-		}
-		else if (hi < lo) {
-			this.lo = hi;
-			this.hi = lo;
-		}
+		this.lo = (lo <= hi) ? lo : hi;
+		this.hi = (lo <= hi) ? hi : lo;
+		
 		Parser[] parsers = new Parser[this.hi];
 		int i;
 		for (i = 0; i < this.lo; i++)
