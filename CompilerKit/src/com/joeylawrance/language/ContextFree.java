@@ -25,6 +25,9 @@ public class ContextFree extends Regular {
 	public static Nonterminal nonterminal (String name) {
 		return new Nonterminal(name);
 	}
+	public static CFG cfg(Nonterminal start) {
+		return new CFG(start);
+	}
 	static class FixedPointVisitor extends ContextFreeVisitor<Parser> {
 		public Parser visit(EmptySet emptySet) { return emptySet; }
 		public Parser visit(EmptyString emptyString) { return emptyString; }  // Should really be the set containing the empty string

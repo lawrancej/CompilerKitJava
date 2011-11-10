@@ -1,7 +1,7 @@
 import static com.joeylawrance.language.ContextFree.*;
 
 import com.joeylawrance.language.Nonterminal;
-import com.joeylawrance.language.parsers.CFG;
+import com.joeylawrance.language.Parser;
 
 
 // TODO: make this an honest to goodness jUnit test suite try for 100% branch coverage
@@ -11,7 +11,7 @@ public class CFGTest {
 		Nonterminal product = nonterminal("product");
 		Nonterminal sum = nonterminal("sum");
 		Nonterminal expr = nonterminal ("expr");
-		CFG formula = new CFG(expr);
+		Parser formula = cfg(expr);
 
 		value.becomes(positiveClosure(digit()));
 		value.becomes(parens(expr));
@@ -27,7 +27,7 @@ public class CFGTest {
 		System.out.println(listCFG);
 		System.out.println(recognize(listCFG,"x")); */
 		Nonterminal s = nonterminal("S"); 
-		CFG cfg = new CFG(s);
+		Parser cfg = cfg(s);
 		s.becomes(s,parens(s));
 		s.becomes();
 		System.out.println(cfg);
