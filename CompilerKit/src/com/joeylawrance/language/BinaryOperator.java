@@ -1,6 +1,9 @@
 package com.joeylawrance.language;
 
-class BinaryOperator extends Expression {
-	Parser left, right;		
+public class BinaryOperator extends Expression {
+	private Parser left;
+	private Parser right;
 	public BinaryOperator (Parser left, Parser right) { this.left = left; this.right = right; }
+	public Parser getLeft() { return left; }
+	public Parser getRight() { return right; }
 }

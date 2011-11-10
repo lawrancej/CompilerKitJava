@@ -15,29 +15,29 @@ class NonterminalListBuilder extends ContextFreeVisitor<Void> {
 		// TODO: It'd be nice to be able to reuse visitor entries as long as they have a common base type
 		this.register(Alternation.class, new DefaultVisitorEntry<Parser,Alternation,Void>() {
 			public Void visit(Alternation node) {
-				getParent().visit(node.left);
-				getParent().visit(node.right);
+				getParent().visit(node.getLeft());
+				getParent().visit(node.getRight());
 				return null;
 			}
 		});		
 		this.register(Catenation.class, new DefaultVisitorEntry<Parser,Catenation,Void>() {
 			public Void visit(Catenation node) {
-				getParent().visit(node.left);
-				getParent().visit(node.right);
+				getParent().visit(node.getLeft());
+				getParent().visit(node.getRight());
 				return null;
 			}
 		});
 		this.register(Intersection.class, new DefaultVisitorEntry<Parser,Intersection,Void>() {
 			public Void visit(Intersection node) {
-				getParent().visit(node.left);
-				getParent().visit(node.right);
+				getParent().visit(node.getLeft());
+				getParent().visit(node.getRight());
 				return null;
 			}
 		});		
 		this.register(Difference.class, new DefaultVisitorEntry<Parser,Difference,Void>() {
 			public Void visit(Difference node) {
-				getParent().visit(node.left);
-				getParent().visit(node.right);
+				getParent().visit(node.getLeft());
+				getParent().visit(node.getRight());
 				return null;
 			}
 		});
@@ -76,13 +76,13 @@ class NonterminalListBuilder extends ContextFreeVisitor<Void> {
 	public Void visit(EmptyString emptyString) { return null; }
 	public Void visit(Symbol symbol) { return null; }
 	public Void visit(Alternation alternation) {
-		visit(alternation.left);
-		visit(alternation.right);
+		visit(alternation.getLeft());
+		visit(alternation.getRight());
 		return null;
 	}
 	public Void visit(Catenation catenation) {
-		visit(catenation.left);
-		visit(catenation.right);
+		visit(catenation.getLeft());
+		visit(catenation.getRight());
 		return null;
 	}
 	public Void visit(KleeneClosure kleeneClosure) {
@@ -109,8 +109,8 @@ class NonterminalListBuilder extends ContextFreeVisitor<Void> {
 	}
 	@Override
 	public Void visit(Intersection intersection) {
-		visit(intersection.left);
-		visit(intersection.right);
+		visit(intersection.getLeft());
+		visit(intersection.getRight());
 		return null;
 	}
 }

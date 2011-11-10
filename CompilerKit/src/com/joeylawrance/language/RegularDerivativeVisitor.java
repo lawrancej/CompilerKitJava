@@ -20,8 +20,8 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 		});
 		this.register(Alternation.class, new MemoizedVisitorEntry<Parser,Alternation,Parser>(new DefaultVisitorEntry<Parser,Alternation,Parser>() {
 			public Parser visit(Alternation alternation) {
-				Parser left = getParent().visit(alternation.left);
-				Parser right = getParent().visit(alternation.right);
+				Parser left = getParent().visit(alternation.getLeft());
+				Parser right = getParent().visit(alternation.getRight());
 				if (left == EmptySet.emptySet) return right;
 				else if (right == EmptySet.emptySet) return left;
 				else if (left == right) return left;
@@ -31,18 +31,18 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 		}));
 		this.register(Catenation.class, new MemoizedVisitorEntry<Parser,Catenation,Parser>(new DefaultVisitorEntry<Parser,Catenation,Parser>() {
 			public Parser visit(Catenation catenation) {
-				Parser left = getParent().visit(catenation.left);
-				Parser right = getParent().visit(catenation.right);
-				Parser nulled = ((RegularDerivativeVisitor)getParent()).getNullable().visit(catenation.left);
+				Parser left = getParent().visit(catenation.getLeft());
+				Parser right = getParent().visit(catenation.getRight());
+				Parser nulled = ((RegularDerivativeVisitor)getParent()).getNullable().visit(catenation.getLeft());
 				Parser alternationLeft;
 				Parser alternationRight;
 				
 				if (left == EmptyString.emptyString)
-					alternationLeft = catenation.right;
+					alternationLeft = catenation.getRight();
 				else if (left == EmptySet.emptySet)
 					alternationLeft = EmptySet.emptySet;
 				else
-					alternationLeft = new Catenation(left, catenation.right);
+					alternationLeft = new Catenation(left, catenation.getRight());
 				
 				if (nulled == EmptyString.emptyString)
 					alternationRight = right;
@@ -79,8 +79,8 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 		}));
 		this.register(Intersection.class, new MemoizedVisitorEntry<Parser,Intersection,Parser>(new DefaultVisitorEntry<Parser,Intersection,Parser>(){
 			public Parser visit(Intersection intersection) {
-				Parser left = getParent().visit(intersection.left);
-				Parser right = getParent().visit(intersection.right);
+				Parser left = getParent().visit(intersection.getLeft());
+				Parser right = getParent().visit(intersection.getRight());
 				if (left == right) return right;
 				return new Intersection(left, right);
 			}
@@ -94,8 +94,8 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 	public Parser visit(EmptyString emptyString) { return EmptySet.emptySet; }
 	public Parser visit(Symbol symbol)           { return (symbol.c == c) ? EmptyString.emptyString : EmptySet.emptySet; }
 	public Parser visit(Alternation alternation) {
-		Parser left = visit(alternation.left);
-		Parser right = visit(alternation.right);
+		Parser left = visit(alternation.getLeft());
+		Parser right = visit(alternation.getRight());
 		if (left == EmptySet.emptySet) return right;
 		else if (right == EmptySet.emptySet) return left;
 		else if (left == right) return left;
@@ -103,18 +103,18 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 		// return new Alternation(visit(alternation.left), visit(alternation.right));
 	}
 	public Parser visit(Catenation catenation) {
-		Parser left = visit(catenation.left);
-		Parser right = visit(catenation.right);
-		Parser nulled = this.getNullable().visit(catenation.left);
+		Parser left = visit(catenation.getLeft());
+		Parser right = visit(catenation.getRight());
+		Parser nulled = this.getNullable().visit(catenation.getLeft());
 		Parser alternationLeft;
 		Parser alternationRight;
 		
 		if (left == EmptyString.emptyString)
-			alternationLeft = catenation.right;
+			alternationLeft = catenation.getRight();
 		else if (left == EmptySet.emptySet)
 			alternationLeft = EmptySet.emptySet;
 		else
-			alternationLeft = new Catenation(left, catenation.right);
+			alternationLeft = new Catenation(left, catenation.getRight());
 		
 		if (nulled == EmptyString.emptyString)
 			alternationRight = right;
@@ -143,8 +143,8 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 		return (characterRange.start <= c && c <= characterRange.end) ? EmptyString.emptyString : EmptySet.emptySet;
 	}
 	public Parser visit(Intersection intersection) {
-		Parser left = visit(intersection.left);
-		Parser right = visit(intersection.right);
+		Parser left = visit(intersection.getLeft());
+		Parser right = visit(intersection.getRight());
 		if (left == right) return right;
 		return new Intersection(left, right);
 	}

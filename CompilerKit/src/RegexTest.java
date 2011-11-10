@@ -6,7 +6,7 @@ import com.joeylawrance.language.Parser;
 public class RegexTest {
 
 	public static void main(String[] args) {
-		Parser r = catenation(times(alpha(),3,8), times(digit(),0,4), string("@bridgew.edu"));
+		Parser r = catenation(times(alpha(),3,8), positiveClosure(digit()), string("@bridgew.edu"));
 		long before = System.currentTimeMillis();
 		System.out.println(r);
 		for (int i = 0; i < 10000; i++) {

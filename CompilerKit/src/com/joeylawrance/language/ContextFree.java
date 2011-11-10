@@ -22,7 +22,7 @@ public class ContextFree extends Regular {
 		public Parser visit(Symbol symbol) { return EmptySet.emptySet; }
 		//FIXME
 		public Parser visit(Alternation alternation) {
-			return visit(alternation.left);
+			return visit(alternation.getLeft());
 			// return alternation.right.accept(this);
 		}
 		public Parser visit(Catenation catenation) {

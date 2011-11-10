@@ -17,20 +17,20 @@ class RegularStringVisitor extends VisitorMap<Parser,String> {
 		});
 		this.register(Alternation.class, new DefaultVisitorEntry<Parser,Alternation,String>() {
 			public String visit(Alternation alternation) {
-				return getParent().visit(alternation.left) + "|" + getParent().visit(alternation.right);
+				return getParent().visit(alternation.getLeft()) + "|" + getParent().visit(alternation.getRight());
 			}
 		});
 		this.register(Catenation.class, new DefaultVisitorEntry<Parser,Catenation,String>() {
 			public String visit(Catenation catenation) {
 				StringBuilder sb = new StringBuilder();
-				if (catenation.left instanceof Alternation)
-					sb.append("(" + getParent().visit(catenation.left) + ")");
+				if (catenation.getLeft() instanceof Alternation)
+					sb.append("(" + getParent().visit(catenation.getLeft()) + ")");
 				else
-					sb.append(getParent().visit(catenation.left));
-				if (catenation.right instanceof Alternation)
-					sb.append("(" + getParent().visit(catenation.right) + ")");
+					sb.append(getParent().visit(catenation.getLeft()));
+				if (catenation.getRight() instanceof Alternation)
+					sb.append("(" + getParent().visit(catenation.getRight()) + ")");
 				else
-					sb.append(getParent().visit(catenation.right));
+					sb.append(getParent().visit(catenation.getRight()));
 				return sb.toString();
 			}
 		});
@@ -69,30 +69,30 @@ class RegularStringVisitor extends VisitorMap<Parser,String> {
 		this.register(Intersection.class, new DefaultVisitorEntry<Parser,Intersection,String>() {
 			public String visit(Intersection intersection) {
 				StringBuilder sb = new StringBuilder();
-				if (intersection.left instanceof Alternation)
-					sb.append("(" + getParent().visit(intersection.left) + ")");
+				if (intersection.getLeft() instanceof Alternation)
+					sb.append("(" + getParent().visit(intersection.getLeft()) + ")");
 				else
-					sb.append(getParent().visit(intersection.left));
+					sb.append(getParent().visit(intersection.getLeft()));
 				sb.append("&");
-				if (intersection.right instanceof Alternation)
-					sb.append("(" + getParent().visit(intersection.right) + ")");
+				if (intersection.getRight() instanceof Alternation)
+					sb.append("(" + getParent().visit(intersection.getRight()) + ")");
 				else
-					sb.append(getParent().visit(intersection.right));
+					sb.append(getParent().visit(intersection.getRight()));
 				return sb.toString();
 			}
 		});
 		this.register(Difference.class, new DefaultVisitorEntry<Parser,Difference,String>() {
 			public String visit(Difference difference) {
 				StringBuilder sb = new StringBuilder();
-				if (difference.left instanceof Alternation)
-					sb.append("(" + getParent().visit(difference.left) + ")");
+				if (difference.getLeft() instanceof Alternation)
+					sb.append("(" + getParent().visit(difference.getLeft()) + ")");
 				else
-					sb.append(getParent().visit(difference.left));
+					sb.append(getParent().visit(difference.getLeft()));
 				sb.append("-");
-				if (difference.right instanceof Alternation)
-					sb.append("(" + getParent().visit(difference.right) + ")");
+				if (difference.getRight() instanceof Alternation)
+					sb.append("(" + getParent().visit(difference.getRight()) + ")");
 				else
-					sb.append(getParent().visit(difference.right));
+					sb.append(getParent().visit(difference.getRight()));
 				return sb.toString();
 			}
 		});

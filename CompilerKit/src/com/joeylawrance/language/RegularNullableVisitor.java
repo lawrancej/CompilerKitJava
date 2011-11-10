@@ -17,8 +17,8 @@ class RegularNullableVisitor extends RegularVisitor<Parser> {
 		});
 		this.register(Alternation.class, new DefaultVisitorEntry<Parser, Alternation, Parser>() {
 			public Parser visit(Alternation alternation) {
-				Parser left = getParent().visit(alternation.left);
-				Parser right = getParent().visit(alternation.right);
+				Parser left = getParent().visit(alternation.getLeft());
+				Parser right = getParent().visit(alternation.getRight());
 				if (left == EmptyString.emptyString || right == EmptyString.emptyString)
 					return EmptyString.emptyString;
 				else return EmptySet.emptySet;
@@ -26,8 +26,8 @@ class RegularNullableVisitor extends RegularVisitor<Parser> {
 		});
 		this.register(Catenation.class, new DefaultVisitorEntry<Parser, Catenation, Parser>() {
 			public Parser visit(Catenation catenation) {
-				Parser left = getParent().visit(catenation.left);
-				Parser right = getParent().visit(catenation.right);
+				Parser left = getParent().visit(catenation.getLeft());
+				Parser right = getParent().visit(catenation.getRight());
 				if (left == EmptySet.emptySet || right == EmptySet.emptySet) {
 					return EmptySet.emptySet;
 				} else return EmptyString.emptyString;
@@ -45,8 +45,8 @@ class RegularNullableVisitor extends RegularVisitor<Parser> {
 		});
 		this.register(Intersection.class, new DefaultVisitorEntry<Parser,Intersection,Parser>() {
 			public Parser visit(Intersection intersection) {
-				Parser left = getParent().visit(intersection.left);
-				Parser right = getParent().visit(intersection.right);
+				Parser left = getParent().visit(intersection.getLeft());
+				Parser right = getParent().visit(intersection.getRight());
 				if (left == EmptySet.emptySet || right == EmptySet.emptySet)
 					return EmptySet.emptySet;
 				else return EmptyString.emptyString;
@@ -57,15 +57,15 @@ class RegularNullableVisitor extends RegularVisitor<Parser> {
 	public Parser visit(EmptyString emptyString) { return emptyString; }
 	public Parser visit(Symbol symbol)           { return EmptySet.emptySet; }
 	public Parser visit(Alternation alternation) {
-		Parser left = visit(alternation.left);
-		Parser right = visit(alternation.right);
+		Parser left = visit(alternation.getLeft());
+		Parser right = visit(alternation.getRight());
 		if (left == EmptyString.emptyString || right == EmptyString.emptyString)
 			return EmptyString.emptyString;
 		else return EmptySet.emptySet;
 	}
 	public Parser visit(Catenation catenation) {
-		Parser left = visit(catenation.left);
-		Parser right = visit(catenation.right);
+		Parser left = visit(catenation.getLeft());
+		Parser right = visit(catenation.getRight());
 		if (left == EmptySet.emptySet || right == EmptySet.emptySet) {
 			return EmptySet.emptySet;
 		} else return EmptyString.emptyString;
@@ -77,8 +77,8 @@ class RegularNullableVisitor extends RegularVisitor<Parser> {
 		else return EmptySet.emptySet;
 	}
 	public Parser visit(Intersection intersection) {
-		Parser left = visit(intersection.left);
-		Parser right = visit(intersection.right);
+		Parser left = visit(intersection.getLeft());
+		Parser right = visit(intersection.getRight());
 		if (left == EmptySet.emptySet || right == EmptySet.emptySet)
 			return EmptySet.emptySet;
 		else return EmptyString.emptyString;
