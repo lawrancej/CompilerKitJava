@@ -6,9 +6,7 @@ package com.joeylawrance.language;
  * "Derivatives of Regular expressions", by Janus Brzozowski
  */
 public class Regular {
-	public static Symbol symbol (char c) {
-		return Symbol.symbol(c);
-	}
+	public static Symbol symbol (char c) { return Symbol.symbol(c); }
 	public static Alternation alternation (Parser ... parsers) {
 		return Alternation.alternation(parsers);
 	}
@@ -44,4 +42,14 @@ public class Regular {
 	public static Parser not(Parser parser) { return new Complement(parser); }
 	public static Parser intersection(Parser ... parsers) { return Intersection.intersection(parsers); }
 	public static Parser difference(Parser left, Parser right) {return new Difference(left, right); }
+	private static DerivativeVisitor<Parser,Parser> derivative;
+	private static DerivativeVisitor<Parser,Parser> getDerivative() {
+//		if (derivative == null) { // TODO: is it possible that this would affect the outcome, given the memoization going on?
+			derivative = new RegularDerivativeVisitor(RegularNullableVisitor.getInstance());
+//		}
+		return derivative;
+	}
+	public static boolean recognize (Parser parser, String string) {
+		return Matcher.recognize(parser, string, getDerivative());
+	}
 }

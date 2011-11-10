@@ -122,4 +122,7 @@ public class ContextFree extends Regular {
 		}
 		public HashSet<Nonterminal> set = new HashSet<Nonterminal>();
 	}
+	public static boolean recognize (Parser parser, String string) {
+		return Matcher.recognize(parser, string, new ContextFreeDerivativeVisitor(ContextFreeNullableVisitor.getInstance()));
+	}
 }

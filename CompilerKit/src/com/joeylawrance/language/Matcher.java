@@ -1,8 +1,7 @@
 package com.joeylawrance.language;
 
-public class Matcher {
-	public static boolean recognize (Parser parser, CharSequence str) { // TODO: Move outside to Match class, because of visibility issues and besides, this wont work with Regular and Context-Free
-		DerivativeVisitor<Parser,Parser> derivative = parser.getDerivative();
+class Matcher {
+	public static boolean recognize (Parser parser, CharSequence str, DerivativeVisitor<Parser,Parser> derivative) {
 		for (int i = 0; i < str.length(); i++) {
 			derivative.setSymbol(str.charAt(i));
 //			System.out.print("Symbol:" + derivative.getSymbol());

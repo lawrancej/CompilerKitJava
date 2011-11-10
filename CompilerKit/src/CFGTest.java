@@ -1,7 +1,6 @@
 import static com.joeylawrance.language.ContextFree.*;
 
 import com.joeylawrance.language.CFG;
-import com.joeylawrance.language.Matcher;
 import com.joeylawrance.language.Nonterminal;
 
 
@@ -26,13 +25,13 @@ public class CFGTest {
 		list.becomes(catenation(list,symbol('x')));
 		list.becomes(symbol('x'));
 		System.out.println(listCFG);
-		System.out.println(Matcher.recognize(listCFG,"x")); */
+		System.out.println(recognize(listCFG,"x")); */
 		Nonterminal s = nonterminal("S"); 
 		CFG cfg = new CFG(s);
 		s.becomes(s,parens(s));
 		s.becomes();
 		System.out.println(cfg);
-		System.out.println(Matcher.recognize(cfg,"()")); // should return false
+		System.out.println(recognize(cfg,"()")); // should return false
 	}
 
 }

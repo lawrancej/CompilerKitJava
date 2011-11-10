@@ -7,10 +7,6 @@ class Expression implements Parser {
 	public Visitor<Parser,String> getPrinter() {
 		return printer;
 	}
-
-	public DerivativeVisitor<Parser, Parser> getDerivative() {
-		return new RegularDerivativeVisitor(RegularNullableVisitor.getInstance());
-	}
 	public String toString () {
 		return getPrinter().visit(this);
 	}
