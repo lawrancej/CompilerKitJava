@@ -8,24 +8,7 @@ import com.joeylawrance.visitor.Visitor;
  * Abstract superclass for all parser combinator classes.
  * Uses the Composite and Visitor design patterns.
  */
-public abstract class Parser {
-	public abstract Visitor<Parser,String> getPrinter();
-	public abstract DerivativeVisitor<Parser,Parser> getDerivative();
-
-	public String toString () {
-		return getPrinter().visit(this);
-	}
-	public boolean recognize (CharSequence str) { // TODO: Move outside to Match class, because of visibility issues and besides, this wont work with Regular and Context-Free
-		Parser parser = this;
-		DerivativeVisitor<Parser,Parser> derivative = getDerivative();
-		for (int i = 0; i < str.length(); i++) {
-			derivative.setSymbol(str.charAt(i));
-//			System.out.print("Symbol:" + derivative.getSymbol());
-//			System.out.println("before: " + parser);
-			parser = derivative.visit(parser);
-//			System.out.println("after: " + parser);
-			if (parser == EmptySet.emptySet) break;
-		}
-		return derivative.getNullable().visit(parser) == EmptyString.emptyString;
-	}
+public interface Parser {
+	public Visitor<Parser,String> getPrinter();
+	public DerivativeVisitor<Parser,Parser> getDerivative();
 }

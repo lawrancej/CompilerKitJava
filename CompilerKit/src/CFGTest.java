@@ -1,6 +1,7 @@
 import static com.joeylawrance.language.ContextFree.*;
 
 import com.joeylawrance.language.CFG;
+import com.joeylawrance.language.Matcher;
 import com.joeylawrance.language.Nonterminal;
 
 
@@ -19,19 +20,19 @@ public class CFGTest {
 		sum.becomes(product, kleeneClosure(catenation(alternation(symbol('+'),symbol('-')),product)));
 		expr.becomes(sum);
 		System.out.println(formula);
-
+/*
 		Nonterminal list = nonterminal("List");
 		CFG listCFG = new CFG(list);
 		list.becomes(catenation(list,symbol('x')));
 		list.becomes(symbol('x'));
 		System.out.println(listCFG);
-		System.out.println(listCFG.recognize("x"));
-		Nonterminal s = nonterminal("S");
+		System.out.println(Matcher.recognize(listCFG,"x")); */
+		Nonterminal s = nonterminal("S"); 
 		CFG cfg = new CFG(s);
 		s.becomes(s,parens(s));
 		s.becomes();
 		System.out.println(cfg);
-		System.out.println(cfg.recognize("())")); // should return false
+		System.out.println(Matcher.recognize(cfg,"()")); // should return false
 	}
 
 }
