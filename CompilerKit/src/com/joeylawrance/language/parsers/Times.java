@@ -2,9 +2,10 @@ package com.joeylawrance.language.parsers;
 
 import com.joeylawrance.language.Parser;
 
-public class Times extends EquivalentExpression {
+public class Times extends EquivalentExpressionImpl implements UnaryOperator {
 	private int hi;
 	private int lo;
+	private Parser node;
 	public Times (Parser node, int hi) {
 		this(node,hi,hi);
 	}
@@ -19,12 +20,16 @@ public class Times extends EquivalentExpression {
 		for ( ; i < this.getHi(); i++)
 			parsers[i] = new Optional(node);
 		this.setEquivalent(Catenation.catenation(parsers));
-		this.setNode(node);
+		this.node = node;
 	}
 	public int getHi() {
 		return hi;
 	}
 	public int getLo() {
 		return lo;
+	}
+	@Override
+	public Parser getNode() {
+		return node;
 	}
 }

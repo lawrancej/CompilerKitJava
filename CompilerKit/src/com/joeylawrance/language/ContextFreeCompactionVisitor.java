@@ -5,7 +5,7 @@ import com.joeylawrance.language.parsers.EmptySet;
 
 class ContextFreeCompactionVisitor extends RegularCompactionVisitor {
 	public Parser visit(Nonterminal nonterminal) { // FIXME: doesn't handle S->S|lambda
-		Parser p = visit(nonterminal.node);
+		Parser p = visit(nonterminal.getNode());
 		if (p == EmptySet.emptySet) return EmptySet.emptySet;
 		Nonterminal result = new Nonterminal(nonterminal.name);
 		result.becomes(p);

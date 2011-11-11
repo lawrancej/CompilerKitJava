@@ -87,7 +87,7 @@ public class ContextFree extends Regular {
 						Nonterminal result = new Nonterminal(nonterminal.name + "'");
 						set.add(nonterminal);
 						result.becomes(nonterminal);
-						result.becomes(getParent().visit(nonterminal.node));
+						result.becomes(getParent().visit(nonterminal.getNode()));
 						return result;
 					}
 				}				
@@ -124,7 +124,7 @@ public class ContextFree extends Regular {
 				Nonterminal result = new Nonterminal(nonterminal.name + "'");
 				set.add(nonterminal);
 				result.becomes(nonterminal);
-				result.becomes(visit(nonterminal.node));
+				result.becomes(visit(nonterminal.getNode()));
 				return result;
 			}
 		}

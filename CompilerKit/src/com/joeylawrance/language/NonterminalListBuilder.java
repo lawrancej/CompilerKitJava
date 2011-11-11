@@ -68,7 +68,7 @@ class NonterminalListBuilder extends ContextFreeVisitor<Void> {
 				// Halt on a rule like: S -> S
 				if (!grammar.getNonterminals().contains(nonterminal)) {
 					grammar.getNonterminals().add(nonterminal);
-					getParent().visit(nonterminal.node);
+					getParent().visit(nonterminal.getNode());
 				}
 				return null;
 			}
@@ -76,7 +76,6 @@ class NonterminalListBuilder extends ContextFreeVisitor<Void> {
 		this.register(CFG.class, new DefaultVisitorEntry<Parser,CFG,Void>() {
 			public Void visit(CFG cfg) {
 				grammar = cfg;
-				grammar.setNonterminals(new ArrayList<Nonterminal>());
 				getParent().visit(cfg.getStart());
 				return null;
 			}
@@ -107,13 +106,12 @@ class NonterminalListBuilder extends ContextFreeVisitor<Void> {
 		// Halt on a rule like: S -> S
 		if (!grammar.getNonterminals().contains(nonterminal)) {
 			grammar.getNonterminals().add(nonterminal);
-			visit(nonterminal.node);
+			visit(nonterminal.getNode());
 		}
 		return null;
 	}
 	public Void visit(CFG cfg) {
 		grammar = cfg;
-		grammar.setNonterminals(new ArrayList<Nonterminal>());
 		visit(cfg.getStart());
 		return null;
 	}

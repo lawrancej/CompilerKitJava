@@ -14,14 +14,12 @@ public class CFG extends Grammar {
 	private ArrayList <Nonterminal> nonterminals;
 	public CFG(Nonterminal start) {
 		this.start = start;
+		this.nonterminals = new ArrayList<Nonterminal>();
 	}
 	public Nonterminal getStart() {
 		return start;
 	}
 	public ArrayList <Nonterminal> getNonterminals() {
 		return nonterminals;
-	}
-	public void setNonterminals(ArrayList <Nonterminal> nonterminals) {
-		this.nonterminals = nonterminals;
 	}
 }

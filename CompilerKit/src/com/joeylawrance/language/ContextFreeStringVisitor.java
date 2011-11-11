@@ -17,7 +17,7 @@ class ContextFreeStringVisitor extends RegularStringVisitor {
 				StringBuilder sb = new StringBuilder();
 				for (Nonterminal nonterm : cfg.getNonterminals()) {
 					sb.append(nonterm.name + " -> ");
-					sb.append(getParent().visit(nonterm.node));
+					sb.append(getParent().visit(nonterm.getNode()));
 					sb.append("\n");
 				}
 				return sb.toString();

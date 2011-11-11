@@ -7,7 +7,7 @@ import com.joeylawrance.language.parsers.EmptyString;
 // TODO: becomes should be a static method inside of contextfree. 
 // also, have a separate node type, production, equivalent to alternation, that allows us to show each production on its own line
 public class Nonterminal extends Grammar {
-	Parser node; String name;
+	private Parser node; String name;
 	public Nonterminal (String name) { this.name = name; }
 	public void becomes (Parser ...nodes) {
 		// Construct new node from node parameter
@@ -20,10 +20,13 @@ public class Nonterminal extends Grammar {
 
 		// If the nonterminal doesn't have a node, it's newNode
 		// Otherwise, its the existing node or newNode
-		if (node == null) {
-			node = newNode;
+		if (getNode() == null) {
+			this.node = newNode;
 		} else {
-			node = Alternation.alternation(node,newNode);
+			this.node = Alternation.alternation(getNode(),newNode);
 		}
+	}
+	public Parser getNode() {
+		return node;
 	}
 }
