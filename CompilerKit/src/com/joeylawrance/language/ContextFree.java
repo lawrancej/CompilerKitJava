@@ -28,7 +28,7 @@ public class ContextFree extends Regular {
 	public static CFG cfg(Nonterminal start) {
 		return new CFG(start);
 	}
-	static class FixedPointVisitor extends ContextFreeVisitor<Parser> {
+	static class FixedPointVisitor extends RegularVisitor<Parser> {
 		public Parser visit(EmptySet emptySet) { return emptySet; }
 		public Parser visit(EmptyString emptyString) { return emptyString; }  // Should really be the set containing the empty string
 		public Parser visit(Symbol symbol) { return EmptySet.emptySet; }
@@ -50,11 +50,9 @@ public class ContextFree extends Regular {
 		public Parser visit(CFG cfg) {
 			return null;
 		}
-		@Override
 		public Parser visit(Complement not) {
 			return null;
 		}
-		@Override
 		public Parser visit(Intersection intersection) {
 			return null;
 		}

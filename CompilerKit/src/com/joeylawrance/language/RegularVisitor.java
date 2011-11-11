@@ -43,22 +43,5 @@ abstract class RegularVisitor<T> extends VisitorMap<Parser,T> {
 		this.register(Difference.class, new DefaultVisitorEntry<Parser,Difference,T>() {
 			public T visit(Difference difference) { return getParent().visit(difference.getEquivalent()); }			
 		});
-	}
-	// Primitive regular expressions
-	public abstract T visit(EmptySet emptySet);
-	public abstract T visit(EmptyString emptyString);
-	public abstract T visit(Symbol symbol);
-	public abstract T visit(Alternation alternation); // AKA: Union
-	public abstract T visit(Catenation catenation);
-	public abstract T visit(KleeneClosure kleeneClosure);
-	public abstract T visit(Complement complement); // AKA: negation, inverse
-	public abstract T visit(Intersection intersection);
-	
-	// Regular expression extensions.
-	// By default, use the equivalent expressions defined in terms of the primitives above
-	public T visit(PositiveClosure positiveClosure) { return visit(positiveClosure.getEquivalent()); }
-	public T visit(Times times) { return visit(times.getEquivalent()); }
-	public T visit(CharacterRange characterRange) { return visit(characterRange.getEquivalent()); }
-	public T visit(Optional optional) { return visit(optional.getEquivalent()); }
-	public T visit(Difference difference) { return visit(difference.getEquivalent()); }
+	}	
 }

@@ -1,7 +1,5 @@
 package com.joeylawrance.language;
 
-import java.util.ArrayList;
-
 import com.joeylawrance.language.parsers.Alternation;
 import com.joeylawrance.language.parsers.CFG;
 import com.joeylawrance.language.parsers.Catenation;
@@ -15,7 +13,7 @@ import com.joeylawrance.language.parsers.Symbol;
 import com.joeylawrance.visitor.DefaultVisitorEntry;
 import com.joeylawrance.visitor.NullVisitorEntry;
 
-class NonterminalListBuilder extends ContextFreeVisitor<Void> {
+class NonterminalListBuilder extends RegularVisitor<Void> {
 	CFG grammar;
 	public NonterminalListBuilder() {
 		super();
@@ -80,45 +78,5 @@ class NonterminalListBuilder extends ContextFreeVisitor<Void> {
 				return null;
 			}
 		});
-	}
-	public Void visit(EmptySet emptySet) { return null; }
-	public Void visit(EmptyString emptyString) { return null; }
-	public Void visit(Symbol symbol) { return null; }
-	public Void visit(Alternation alternation) {
-		visit(alternation.getLeft());
-		visit(alternation.getRight());
-		return null;
-	}
-	public Void visit(Catenation catenation) {
-		visit(catenation.getLeft());
-		visit(catenation.getRight());
-		return null;
-	}
-	public Void visit(KleeneClosure kleeneClosure) {
-		visit(kleeneClosure.getNode());
-		return null;
-	}
-	public Void visit(Complement not) {
-		visit(not.getNode());
-		return null;
-	}
-	public Void visit(Nonterminal nonterminal) {
-		// Halt on a rule like: S -> S
-		if (!grammar.getNonterminals().contains(nonterminal)) {
-			grammar.getNonterminals().add(nonterminal);
-			visit(nonterminal.getNode());
-		}
-		return null;
-	}
-	public Void visit(CFG cfg) {
-		grammar = cfg;
-		visit(cfg.getStart());
-		return null;
-	}
-	@Override
-	public Void visit(Intersection intersection) {
-		visit(intersection.getLeft());
-		visit(intersection.getRight());
-		return null;
 	}
 }
