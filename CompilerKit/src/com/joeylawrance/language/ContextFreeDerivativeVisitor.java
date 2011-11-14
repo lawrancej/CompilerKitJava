@@ -32,7 +32,7 @@ public class ContextFreeDerivativeVisitor extends RegularDerivativeVisitor {
 							}*/
 				if (set.contains(nonterminal)) return nonterminal;
 				else {
-					Nonterminal result = new Nonterminal(nonterminal.name + "'");
+					Nonterminal result = new Nonterminal(nonterminal.getName() + "'");
 					set.add(nonterminal);
 					result.becomes(nonterminal);
 					result.becomes(getParent().visit(nonterminal.getNode()));

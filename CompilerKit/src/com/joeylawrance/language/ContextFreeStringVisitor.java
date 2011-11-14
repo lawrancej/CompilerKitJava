@@ -8,7 +8,7 @@ class ContextFreeStringVisitor extends RegularStringVisitor {
 		super();
 		this.register(Nonterminal.class, new DefaultVisitorEntry<Parser,Nonterminal,String>() {
 			public String visit(Nonterminal nonterminal) {
-				return nonterminal.name;
+				return nonterminal.getName();
 			}
 		});
 		this.register(CFG.class, new DefaultVisitorEntry<Parser,CFG,String>() {
@@ -16,7 +16,7 @@ class ContextFreeStringVisitor extends RegularStringVisitor {
 				ContextFree.builder.visit(cfg);
 				StringBuilder sb = new StringBuilder();
 				for (Nonterminal nonterm : cfg.getNonterminals()) {
-					sb.append(nonterm.name + " -> ");
+					sb.append(nonterm.getName() + " -> ");
 					sb.append(getParent().visit(nonterm.getNode()));
 					sb.append("\n");
 				}
