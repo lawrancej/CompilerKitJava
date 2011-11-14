@@ -33,12 +33,8 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 		});
 		this.register(Alternation.class, new MemoizedVisitorEntry<Parser,Alternation,Parser>(new DefaultVisitorEntry<Parser,Alternation,Parser>() {
 			public Parser visit(Alternation alternation) {
-				Parser left = getParent().visit(alternation.getLeft());
-				Parser right = getParent().visit(alternation.getRight());
-				if (left == EmptySet.emptySet) return right;
-				else if (right == EmptySet.emptySet) return left;
-				else if (left == right) return left;
-				else return Alternation.build(left, right);
+				return Alternation.build(getParent().visit(alternation.getLeft()),
+						getParent().visit(alternation.getRight()));
 				// return new Alternation(visit(alternation.left), visit(alternation.right));			
 			}
 		}));

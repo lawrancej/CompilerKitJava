@@ -18,9 +18,15 @@ public class Alternation extends BinaryOperatorImpl {
 	// Check if the alternation already exists.
 	// If so, return it.
 	// Otherwise, allocate a new alternation and cache it.
-	public static Alternation build (Parser left, Parser right) {
+	public static Parser build (Parser left, Parser right) {
+		// Handle silly cases first
+		if (left == EmptySet.emptySet) return right;
+		else if (right == EmptySet.emptySet) return left;
+		else if (left == right) return left;
+
 		HashMap<Parser,Alternation> lookup;
 		Alternation alternation;
+
 		if (!flyweight.containsKey(left)) {
 			lookup = new HashMap<Parser,Alternation>();
 			flyweight.put(left, lookup);
