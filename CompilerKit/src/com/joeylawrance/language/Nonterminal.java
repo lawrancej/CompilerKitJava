@@ -9,7 +9,7 @@ import com.joeylawrance.language.parsers.EmptyString;
 public class Nonterminal extends Grammar {
 	private Parser node; String name;
 	public Nonterminal (String name) { this.name = name; }
-	public void becomes (Parser ...nodes) {
+	public void becomes (Parser ... nodes) {
 		// Construct new node from node parameter
 		Parser newNode;
 		if (nodes.length > 1)

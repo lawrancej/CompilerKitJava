@@ -16,6 +16,8 @@ public class RegexTest {
 		for (i = 0; i < 10000; i++) {
 			if (!recognize(r,"somebody"+i+"@bridgew.edu")) break;
 			if (recognize(r,"somebody"+i+"@wit.edu")) break;
+			if (!recognize(r,"somebody"+i+"@bridgew.edu")) break;
+			if (recognize(r,"somebody"+i+"@wit.edu")) break;
 		}
 		System.out.println(System.currentTimeMillis() - before); // 125ms for 10000 iterations is MUCH better than before
 		System.gc();

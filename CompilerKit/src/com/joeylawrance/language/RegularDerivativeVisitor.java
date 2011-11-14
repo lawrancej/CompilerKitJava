@@ -21,7 +21,11 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 		super();
 		this.nullable = nullable;
 		this.register(EmptySet.class, new IdentityVisitor<Parser,EmptySet>());
-		this.register(EmptyString.class, new IdentityVisitor<Parser,EmptyString>());
+		this.register(EmptyString.class, new DefaultVisitorEntry<Parser,EmptyString,Parser>() {
+			public Parser visit(EmptyString node) {
+				return EmptySet.emptySet;
+			}
+		});
 		this.register(Symbol.class, new DefaultVisitorEntry<Parser,Symbol,Parser>() {
 			public Parser visit(Symbol symbol) {
 				return (symbol.c == ((RegularDerivativeVisitor)getParent()).getSymbol()) ? EmptyString.emptyString : EmptySet.emptySet;
