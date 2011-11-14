@@ -35,44 +35,21 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 			public Parser visit(Alternation alternation) {
 				return Alternation.build(getParent().visit(alternation.getLeft()),
 						getParent().visit(alternation.getRight()));
-				// return new Alternation(visit(alternation.left), visit(alternation.right));			
 			}
 		}));
 		this.register(Catenation.class, new MemoizedVisitorEntry<Parser,Catenation,Parser>(new DefaultVisitorEntry<Parser,Catenation,Parser>() {
 			public Parser visit(Catenation catenation) {
 				Parser left = getParent().visit(catenation.getLeft());
 				Parser right = getParent().visit(catenation.getRight());
-				Parser nulled = ((RegularDerivativeVisitor)getParent()).getNullable().visit(catenation.getLeft());
-				Parser alternationLeft;
-				Parser alternationRight;
-				
-				if (left == EmptyString.emptyString)
-					alternationLeft = catenation.getRight();
-				else if (left == EmptySet.emptySet)
-					alternationLeft = EmptySet.emptySet;
-				else
-					alternationLeft = Catenation.build(left, catenation.getRight());
-				
-				if (nulled == EmptyString.emptyString)
-					alternationRight = right;
-				else if (nulled == EmptySet.emptySet)
-					alternationRight = EmptySet.emptySet;
-				else
-					alternationRight = Catenation.build(nulled, right);
-				
-				if (alternationLeft == EmptySet.emptySet) return alternationRight;
-				else if (alternationRight == EmptySet.emptySet) return alternationLeft;
-				else return Alternation.build(alternationLeft, alternationRight);
-//				return new Alternation (
-//						new Catenation (visit(catenation.left), catenation.right),
-//						new Catenation (NullableVisitor.nullable.visit(catenation.left),visit(catenation.right)));
+				Parser nulled = getNullable().visit(catenation.getLeft());
+								
+				return Alternation.build(Catenation.build(left, catenation.getRight()),
+						Catenation.build(nulled, right));
 			}
 		}));
 		this.register(KleeneClosure.class,new MemoizedVisitorEntry<Parser,KleeneClosure,Parser>(new DefaultVisitorEntry<Parser,KleeneClosure,Parser>() {
 			public Parser visit(KleeneClosure kleeneClosure) {
 				Parser left = getParent().visit(kleeneClosure.getNode());
-				if (left == EmptyString.emptyString) return kleeneClosure;
-				else if (left == EmptySet.emptySet) return EmptySet.emptySet;
 				return Catenation.build(left, kleeneClosure);
 			}			
 		}));

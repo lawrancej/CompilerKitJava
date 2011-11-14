@@ -18,7 +18,13 @@ public class Catenation extends BinaryOperatorImpl {
 	// Check if the catenation already exists.
 	// If so, return it.
 	// Otherwise, allocate a new catenation and cache it.
-	public static Catenation build (Parser left, Parser right) {
+	public static Parser build (Parser left, Parser right) {
+		// Handle silly cases first
+		if (left == EmptyString.emptyString) return right;
+		else if (right == EmptyString.emptyString) return left;
+		else if (left == EmptySet.emptySet) return left;
+		else if (right == EmptySet.emptySet) return right;
+		
 		HashMap<Parser,Catenation> lookup;
 		Catenation catenation;
 		if (!flyweight.containsKey(left)) {
