@@ -1,17 +1,9 @@
 package com.joeylawrance.language;
 
-import com.joeylawrance.language.parsers.Alternation;
-import com.joeylawrance.language.parsers.Catenation;
 import com.joeylawrance.language.parsers.CharacterRange;
-import com.joeylawrance.language.parsers.Complement;
 import com.joeylawrance.language.parsers.Difference;
-import com.joeylawrance.language.parsers.EmptySet;
-import com.joeylawrance.language.parsers.EmptyString;
-import com.joeylawrance.language.parsers.Intersection;
-import com.joeylawrance.language.parsers.KleeneClosure;
 import com.joeylawrance.language.parsers.Optional;
 import com.joeylawrance.language.parsers.PositiveClosure;
-import com.joeylawrance.language.parsers.Symbol;
 import com.joeylawrance.language.parsers.Times;
 import com.joeylawrance.visitor.DefaultVisitorEntry;
 import com.joeylawrance.visitor.VisitorMap;

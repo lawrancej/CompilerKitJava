@@ -21,4 +21,8 @@ public class Symbol extends Expression implements Comparable<Symbol> {
 		if (c == symbol.c) return 0;
 		return -1;
 	}
+	@Override
+	public int hashCode() {
+		return (int)c;
+	}
 }

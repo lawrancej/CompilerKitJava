@@ -34,7 +34,7 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 				if (left == EmptySet.emptySet) return right;
 				else if (right == EmptySet.emptySet) return left;
 				else if (left == right) return left;
-				else return new Alternation(left, right);
+				else return Alternation.build(left, right);
 				// return new Alternation(visit(alternation.left), visit(alternation.right));			
 			}
 		}));
@@ -51,18 +51,18 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 				else if (left == EmptySet.emptySet)
 					alternationLeft = EmptySet.emptySet;
 				else
-					alternationLeft = new Catenation(left, catenation.getRight());
+					alternationLeft = Catenation.build(left, catenation.getRight());
 				
 				if (nulled == EmptyString.emptyString)
 					alternationRight = right;
 				else if (nulled == EmptySet.emptySet)
 					alternationRight = EmptySet.emptySet;
 				else
-					alternationRight = new Catenation(nulled, right);
+					alternationRight = Catenation.build(nulled, right);
 				
 				if (alternationLeft == EmptySet.emptySet) return alternationRight;
 				else if (alternationRight == EmptySet.emptySet) return alternationLeft;
-				else return new Alternation(alternationLeft, alternationRight);
+				else return Alternation.build(alternationLeft, alternationRight);
 //				return new Alternation (
 //						new Catenation (visit(catenation.left), catenation.right),
 //						new Catenation (NullableVisitor.nullable.visit(catenation.left),visit(catenation.right)));
@@ -73,7 +73,7 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 				Parser left = getParent().visit(kleeneClosure.getNode());
 				if (left == EmptyString.emptyString) return kleeneClosure;
 				else if (left == EmptySet.emptySet) return EmptySet.emptySet;
-				return new Catenation (left, kleeneClosure);
+				return Catenation.build(left, kleeneClosure);
 			}			
 		}));
 		this.register(Complement.class, new MemoizedVisitorEntry<Parser,Complement,Parser>(new DefaultVisitorEntry<Parser,Complement,Parser>() {
@@ -81,11 +81,11 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 				return new Complement(getParent().visit(not.getNode()));
 			}
 		}));
-		this.register(CharacterRange.class, new MemoizedVisitorEntry<Parser,CharacterRange,Parser>(new DefaultVisitorEntry<Parser,CharacterRange,Parser>() {
+		this.register(CharacterRange.class, new DefaultVisitorEntry<Parser,CharacterRange,Parser>() {
 			public Parser visit(CharacterRange characterRange) {
 				return (characterRange.getStart() <= c && c <= characterRange.getEnd()) ? EmptyString.emptyString : EmptySet.emptySet;
 			}
-		}));
+		});
 		this.register(Intersection.class, new MemoizedVisitorEntry<Parser,Intersection,Parser>(new DefaultVisitorEntry<Parser,Intersection,Parser>(){
 			public Parser visit(Intersection intersection) {
 				Parser left = getParent().visit(intersection.getLeft());

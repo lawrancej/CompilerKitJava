@@ -18,7 +18,7 @@ public class Times extends EquivalentExpressionImpl implements UnaryOperator {
 		for (i = 0; i < this.getLo(); i++)
 			parsers[i] = node;
 		for ( ; i < this.getHi(); i++)
-			parsers[i] = new Optional(node);
+			parsers[i] = Alternation.build(node,EmptyString.emptyString);
 		this.setEquivalent(Catenation.catenation(parsers));
 		this.node = node;
 	}

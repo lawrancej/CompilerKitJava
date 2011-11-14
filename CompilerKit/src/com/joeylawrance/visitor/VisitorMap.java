@@ -33,9 +33,6 @@ public class VisitorMap<BaseNodeType,ReturnType> implements Visitor<BaseNodeType
 	public ReturnType visit(BaseNodeType node) {
 		return ((Visitor<BaseNodeType,ReturnType>)map.get(node.getClass())).visit(node);
 	}
-	public Collection<VisitorEntry<BaseNodeType, ? extends BaseNodeType, ReturnType>> getEntries() {
-		return map.values();
-	}
 	public Object getState() {
 		return state;
 	}
