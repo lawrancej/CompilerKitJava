@@ -78,12 +78,10 @@ class RegularDerivativeVisitor extends RegularVisitor<Parser> implements Derivat
 	}
 	@Override
 	public char getSymbol() {
-		// TODO Auto-generated method stub
 		return c;
 	}
 	@Override
 	public void setSymbol(char c) {
-		// TODO Auto-generated method stub
 		this.c = c;
 		setState(new Character(c));
 	}
