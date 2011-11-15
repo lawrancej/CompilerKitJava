@@ -1,6 +1,7 @@
 package com.joeylawrance.language;
 
 import com.joeylawrance.language.parsers.CFG;
+import com.joeylawrance.language.parsers.Production;
 import com.joeylawrance.visitor.DefaultVisitorEntry;
 
 class ContextFreeStringVisitor extends RegularStringVisitor {
@@ -23,5 +24,6 @@ class ContextFreeStringVisitor extends RegularStringVisitor {
 				return sb.toString();
 			}
 		});
+		this.register(Production.class, new EquivalentVisitorEntry<Production,String>());
 	}
 }

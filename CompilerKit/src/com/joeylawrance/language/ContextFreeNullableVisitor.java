@@ -3,6 +3,7 @@ package com.joeylawrance.language;
 import java.util.HashMap;
 
 import com.joeylawrance.language.parsers.CFG;
+import com.joeylawrance.language.parsers.Production;
 import com.joeylawrance.visitor.DefaultVisitorEntry;
 
 class ContextFreeNullableVisitor extends RegularNullableVisitor {
@@ -24,5 +25,6 @@ class ContextFreeNullableVisitor extends RegularNullableVisitor {
 				return getParent().visit(cfg.getStart());
 			}
 		});
+		this.register(Production.class, new EquivalentVisitorEntry<Production,Parser>());
 	}
 }
