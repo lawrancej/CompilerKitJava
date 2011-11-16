@@ -3,7 +3,6 @@ package com.joeylawrance.language;
 import java.util.HashMap;
 
 import com.joeylawrance.language.parsers.CFG;
-import com.joeylawrance.language.parsers.Production;
 import com.joeylawrance.visitor.DefaultVisitorEntry;
 
 class ContextFreeNullableVisitor extends RegularNullableVisitor {
@@ -15,7 +14,7 @@ class ContextFreeNullableVisitor extends RegularNullableVisitor {
 		this.register(Nonterminal.class, new DefaultVisitorEntry<Parser,Nonterminal,Parser>() {
 			public Parser visit(Nonterminal nonterminal) {
 				if (!map.containsKey(nonterminal)) {
-					map.put(nonterminal, getParent().visit(nonterminal.getNode())); // this is where we run into trouble: it's visiting before we can put it in the map. to fix it, we will make an anonymous visitor!
+//					map.put(nonterminal, getParent().visit(nonterminal.getNode())); // this is where we run into trouble: it's visiting before we can put it in the map. to fix it, we will make an anonymous visitor!
 				}
 				return map.get(nonterminal);
 			}			
@@ -25,6 +24,5 @@ class ContextFreeNullableVisitor extends RegularNullableVisitor {
 				return getParent().visit(cfg.getStart());
 			}
 		});
-		this.register(Production.class, new EquivalentVisitorEntry<Production,Parser>());
 	}
 }

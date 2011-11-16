@@ -1,7 +1,6 @@
 package com.joeylawrance.language;
 
 import com.joeylawrance.language.parsers.CFG;
-import com.joeylawrance.language.parsers.Production;
 import com.joeylawrance.visitor.DefaultVisitorEntry;
 
 class ContextFreeStringVisitor extends RegularStringVisitor {
@@ -17,13 +16,14 @@ class ContextFreeStringVisitor extends RegularStringVisitor {
 				ContextFree.builder.visit(cfg);
 				StringBuilder sb = new StringBuilder();
 				for (Nonterminal nonterm : cfg.getNonterminals()) {
-					sb.append(nonterm.getName() + " -> ");
-					sb.append(getParent().visit(nonterm.getNode()));
-					sb.append("\n");
+					for (Parser p : nonterm.getProductions()) {
+						sb.append(nonterm.getName() + " -> ");
+						sb.append(getParent().visit(p));
+						sb.append("\n");
+					}
 				}
 				return sb.toString();
 			}
 		});
-		this.register(Production.class, new EquivalentVisitorEntry<Production,String>());
 	}
 }

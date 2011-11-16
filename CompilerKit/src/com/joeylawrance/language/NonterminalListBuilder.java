@@ -9,7 +9,6 @@ import com.joeylawrance.language.parsers.EmptySet;
 import com.joeylawrance.language.parsers.EmptyString;
 import com.joeylawrance.language.parsers.Intersection;
 import com.joeylawrance.language.parsers.KleeneClosure;
-import com.joeylawrance.language.parsers.Production;
 import com.joeylawrance.language.parsers.Symbol;
 import com.joeylawrance.visitor.DefaultVisitorEntry;
 import com.joeylawrance.visitor.NullVisitorEntry;
@@ -67,7 +66,9 @@ class NonterminalListBuilder extends RegularVisitor<Void> {
 				// Halt on a rule like: S -> S
 				if (!grammar.getNonterminals().contains(nonterminal)) {
 					grammar.getNonterminals().add(nonterminal);
-					getParent().visit(nonterminal.getNode());
+					for (Parser p : nonterminal.getProductions()) {
+						getParent().visit(p);
+					}
 				}
 				return null;
 			}
@@ -79,6 +80,5 @@ class NonterminalListBuilder extends RegularVisitor<Void> {
 				return null;
 			}
 		});
-		this.register(Production.class, new EquivalentVisitorEntry<Production,Void>());
 	}
 }

@@ -3,7 +3,6 @@ package com.joeylawrance.language;
 import java.util.HashSet;
 
 import com.joeylawrance.language.parsers.CFG;
-import com.joeylawrance.language.parsers.Production;
 import com.joeylawrance.visitor.DefaultVisitorEntry;
 import com.joeylawrance.visitor.Visitor;
 
@@ -36,7 +35,7 @@ public class ContextFreeDerivativeVisitor extends RegularDerivativeVisitor {
 					Nonterminal result = new Nonterminal(nonterminal.getName() + "'");
 					set.add(nonterminal);
 					result.becomes(nonterminal);
-					result.becomes(getParent().visit(nonterminal.getNode()));
+//					result.becomes(getParent().visit(nonterminal.getNode()));
 					return result;
 				}
 			}				
@@ -47,7 +46,6 @@ public class ContextFreeDerivativeVisitor extends RegularDerivativeVisitor {
 				return result;
 			}				
 		});
-		this.register(Production.class, new EquivalentVisitorEntry<Production,Parser>());
 	}
 	public HashSet<Nonterminal> set = new HashSet<Nonterminal>();
 }
