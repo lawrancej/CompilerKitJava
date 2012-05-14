@@ -9,6 +9,7 @@ import com.joeylawrance.language.parsers.EmptySet;
 import com.joeylawrance.language.parsers.EmptyString;
 import com.joeylawrance.language.parsers.Intersection;
 import com.joeylawrance.language.parsers.KleeneClosure;
+import com.joeylawrance.language.parsers.NonterminalImpl;
 import com.joeylawrance.language.parsers.Symbol;
 
 /**
@@ -20,7 +21,7 @@ import com.joeylawrance.language.parsers.Symbol;
 public class ContextFree extends Regular {
 	static final NonterminalListBuilder builder = new NonterminalListBuilder();
 	public static Nonterminal nonterminal (String name) {
-		return new Nonterminal(name);
+		return new NonterminalImpl(name);
 	}
 	public static CFG cfg(Nonterminal start) {
 		return new CFG(start);
@@ -41,7 +42,7 @@ public class ContextFree extends Regular {
 		public Parser visit(KleeneClosure kleeneClosure) {
 			return null;
 		}
-		public Parser visit(Nonterminal nonterminal) {
+		public Parser visit(NonterminalImpl nonterminal) {
 			return null;
 		}
 		public Parser visit(CFG cfg) {
